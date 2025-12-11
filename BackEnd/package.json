@@ -1,0 +1,28 @@
+{
+  "name": "grad-proj",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@react-three/fiber": "^9.4.2",
+    "@react-three/postprocessing": "^3.0.4",
+    "child_process": "^1.0.2",
+    "colorthief": "^2.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "mongodb": "^6.21.0",
+    "mongoose": "^8.19.4",
+    "passport": "^0.7.0",
+    "passport-steam": "^1.0.18",
+    "postprocessing": "^6.38.0",
+    "three": "^0.181.2"
+  }
+}
