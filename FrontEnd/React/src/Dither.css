@@ -1,0 +1,7 @@
+/* Dither.css - Ensure this file is correctly linked and contains this */
+.dither-container {
+    /* The Canvas element is given this class inside Dither.jsx */
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+}
