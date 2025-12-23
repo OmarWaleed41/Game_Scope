@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Share2, ShoppingCart, DiamondPlus, Menu, Home, Library, Clock, User, Settings, Search, ArrowLeft, Star, ChevronLeft, ChevronRight } from 'lucide-react';
-import './GameStore.css';
+import './GameStore2.css';
 import Dither from './Dither';
+import Card from './card.jsx';
 
 const gamesDatabase = [];
 
@@ -30,8 +31,8 @@ async function loadLibrary(id){
     body: JSON.stringify({ steamId: id })
   });
   const data = await response.json();
-  console.log('Library data:', data);
-  const games = data.response.games;
+  console.log('Library data:', data.recommendations);
+  const games = data.recommendations;
   return games;
 };
 
@@ -72,6 +73,11 @@ async function getSearchResults(searchQuery){
   return results;
 }
 
+function visitGame(id) {
+  window.open(`https://store.steampowered.com/app/${id}`, '_blank');
+};
+
+// Main Component
 export default function GameStorePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -118,7 +124,7 @@ export default function GameStorePage() {
       try {
         const results = await getSearchResults(searchQuery);
         setSearchResults(results);
-        // console.log('Search results set:', searchResults);
+        console.log('Search results set:', results);
         navigateTo('search', { searchQuery, searchResults: results });
       } catch (error) {
         console.error('Search failed:', error);
@@ -128,9 +134,13 @@ export default function GameStorePage() {
 
   const openGame = async (game) => {
     try {
-      const response = await fetch(`https://corsproxy.io/?https://store.steampowered.com/api/appdetails?appids=${game.GameID}`);
+      const response = await fetch(`http://localhost:3001/getGameDetails`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ appId: game.GameID })
+      });
       const data = await response.json();
-      const gameD = data[game.GameID].data;
+      const gameD = data.gameDetails;
 
       console.log('Fetched game details:', gameD);
 
@@ -279,7 +289,7 @@ export default function GameStorePage() {
         <div className="main-content">
         
         
-        <div className="search-container">
+        <div className="top-container">
           <AnimatePresence mode="wait">
               <motion.div
                 key="search-input"
@@ -299,11 +309,21 @@ export default function GameStorePage() {
                   className="search-input"
                 />
               </motion.div>
+              <motion.div
+                className="other-buttons-wrapper"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                <motion.button className="top-btn"><img src="pfp" alt="pfp" /></motion.button>
+              </motion.div>
           </AnimatePresence>
+          
         </div>
         <AnimatePresence mode="wait">
           {currentPage === 'store' && <StorePage games={gamesDatabase} openGame={openGame} likedGames={likedGames} toggleLike={toggleLike} />}
-          {currentPage === 'library' && <LibraryPage />}
+          {currentPage === 'library' && <LibraryPage openGame={openGame} />}
           {currentPage === 'search' && <SearchResultsPage results={searchResults} searchQuery={searchQuery} openGame={openGame} goBack={goBack} likedGames={likedGames} toggleLike={toggleLike} />}
           {currentPage === 'game' && <GameDetailPage game={selectedGame} goBack={goBack} likedGames={likedGames} toggleLike={toggleLike} recs={gameRecs} openGame={openGame} />}
           {currentPage === 'profile' && <ProfilePage />}
@@ -430,30 +450,30 @@ function StorePage({ games, openGame, likedGames, toggleLike }) {
   );
 }
 
-function LibraryPage({}) {
+function LibraryPage({openGame}) {
   const [libraryData, setLibraryData] = useState(null);
 
   useEffect(() => {
-    const fetchAllLibraries = async () => {
-      const allGames = [];
-      for (const user_id of User_IDS) {
-        try {
-          const data = await loadLibrary(user_id);
-          if (data && Array.isArray(data)) {
-            allGames.push(...data);
+      const fetchAllLibraries = async () => {
+        const allGames = [];
+        for (const user_id of User_IDS) {
+          try {
+            const data = await loadLibrary(user_id);
+            if (data && Array.isArray(data)) {
+              allGames.push(...data);
+            }
+          } catch (error) {
+            console.error(`Failed to load library for user ${user_id}:`, error);
           }
-        } catch (error) {
-          console.error(`Failed to load library for user ${user_id}:`, error);
         }
-      }
-      const uniqueGames = Array.from(
-        new Map(allGames.map(game => [game.appid, game])).values()
-      );
-      setLibraryData(uniqueGames);
-    };
-    
-    fetchAllLibraries();
-  }, []);
+        const uniqueGames = Array.from(
+          new Map(allGames.map(game => [game.GameID, game])).values()
+        );
+        setLibraryData(uniqueGames);
+      };
+      
+      fetchAllLibraries();
+    }, []);
 
   console.log('Library Data in LibraryPage:', libraryData);
 
@@ -472,13 +492,14 @@ function LibraryPage({}) {
           libraryData.map((game, idx) => (
             <motion.div
             key={game.appid}
-            style={{margin: 10}}
-            className='library-game-card'
-            whileHover={{ scale: 1.05, x: -4 }}
-            whileTap={{ scale: 0.95 }}>
-              {/* <h3>{game.name}</h3>
-              <p>Playtime: {Math.round(game.playtime_forever / 60)} hours</p> */}
-              <img src={`https://cdn.akamai.steamstatic.com/steam/apps/${game.appid}/library_600x900.jpg`} alt="" />
+            >
+              <Card
+                game={game}
+                title={game.Name}
+                IMGsrc={`https://cdn.akamai.steamstatic.com/steam/apps/${game.GameID}/library_600x900.jpg`}
+                idx={idx}
+                onClick={() => openGame(game)}
+              />
             </motion.div>
           ))
         ) : (
@@ -526,35 +547,14 @@ function SearchResultsPage({ results, searchQuery, openGame, goBack, likedGames,
         <div className="games-grid">
           {results.map((game, idx) => (
             <motion.div
-              key={game.GameID}
-              className="game-card"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1 }}
-              whileHover={{ y: -8, boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}
-              onClick={() => openGame(game)}
-            >
-              <div className="game-card-image">
-                <img src={`https://cdn.akamai.steamstatic.com/steam/apps/${game.GameID}/library_600x900.jpg`} alt={game.Name} />
-                <motion.button
-                  className={`game-card-like ${likedGames.has(game.GameID) ? 'liked' : ''}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleLike(game.GameID);
-                  }}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Heart size={18} fill={likedGames.has(game.GameID) ? 'currentColor' : 'none'} />
-                </motion.button>
-              </div>
-              <div className="game-card-content">
-                <h3 className="game-card-title">{game.Name}</h3>
-                <div className="game-card-rating">
-                  <Star size={14} fill="#a855f7" color="#a855f7" />
-                  <span>{(game.positive_ratio * 5).toFixed(1)}</span>
-                </div>
-              </div>
+              key={game.GameID}>
+              <Card
+                  game={game}
+                  title={game.Name}
+                  IMGsrc={`https://cdn.akamai.steamstatic.com/steam/apps/${game.GameID}/library_600x900.jpg`}
+                  idx={idx}
+                  onClick={() => openGame(game)}
+              />
             </motion.div>
           ))}
         </div>
@@ -677,7 +677,7 @@ function GameDetailPage({ game, goBack, likedGames, toggleLike, recs, openGame }
                 <DiamondPlus size={20} />
                 Add to Library
               </motion.button>
-              <motion.button className="library-btn" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <motion.button className="library-btn" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => visitGame(game.steam_appid)}>
                 <ShoppingCart size={20} />
                 Visit Store
               </motion.button>
@@ -735,23 +735,21 @@ function GameDetailPage({ game, goBack, likedGames, toggleLike, recs, openGame }
               {recs.slice(0, 10).map((rec, recIDX) => (
                 <motion.div
                   key={rec.GameID}
-                  className="game-card"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: recIDX * 0.1 }}
-                  whileHover={{ y: -8, boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}
                   onClick={() => openGame(rec)}
                 >
-                  <div className="game-card-image">
-                    <img src={rec.image} alt={rec.Name} />
-                  </div>
-                  <div className="game-card-content">
-                    <h3 className="game-card-title">{rec.Name}</h3>
-                  </div>
+                  <Card
+                        title={rec.Name}
+                        IMGsrc={`https://cdn.akamai.steamstatic.com/steam/apps/${rec.GameID}/library_600x900.jpg`}
+                        />
                 </motion.div>
               ))}
             </motion.div>
           )}
+        </div>
+        <div className="bottom-container">
+            <motion.div className="card" whileHover={{ backgroundColor: 'rgba(31, 41, 55, 0.7)' }}>
+
+            </motion.div>
         </div>
       </div>
     </motion.div>
