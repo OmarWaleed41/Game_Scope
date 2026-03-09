@@ -6,6 +6,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const session = require('express-session');
 // const color_theif = require('color-thief-node');
 
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -15,9 +16,9 @@ app.use(session({
     saveUninitialized: true,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24, // 24 hours
-        httpOnly: false,
-        secure: false,
-        sameSite: 'lax'
+        httpOnly: false, // Prevents client-side JavaScript access to the cookie (security)
+        secure: false, // Set to true if using HTTPS (required for production)
+        sameSite: 'lax' // Recommended for modern web security
     }
 }));
 app.use(passport.initialize());
@@ -29,7 +30,7 @@ passport.deserializeUser((obj, done) => done(null, obj));
 passport.use(new SteamStrategy({
     returnURL: 'http://localhost:3000/auth/steam/return',
     realm: 'http://localhost:3000/',
-    apiKey: 'ADD_API_KEY_HERE'
+    apiKey: 'AD93D64A61369FD9B96A9CEC4B56FF1C'
 }, (identifier, profile, done) => {
     const steamID = profile.id;
     return done(null, profile);
@@ -52,10 +53,10 @@ async function DB_connect(){
     console.log(first);
 }
 
-DB_connect();
+// DB_connect();
 const PORT = process.env.PORT || 3001;
 const PYTHON_SERVICE_URL = process.env.PYTHON_SERVICE_URL || 'http://127.0.0.1:5000';
-const REQUEST_TIMEOUT = 15000; // 15 seconds
+const REQUEST_TIMEOUT = 15000; // 30 seconds
 
 // Middleware
 app.use((req, res, next) => {
@@ -77,6 +78,25 @@ app.post('/login', async (req,res) => {
     }
 });
 
+app.post('/getGameDetails', async (req,res) => {
+    console.log('GetGameDetails endpoint hit!');
+    const { appId } = req.body;
+    const response = await fetch(`https://store.steampowered.com/api/appdetails?appids=${appId}&cc=us`);
+    const Data = await response.json();
+    console.log('Game details fetched:', Data);
+    const gameD = Data[appId]?.data;
+    res.json({ status: 'success', gameDetails: gameD||null });
+});
+
+app.post('/getGameReviews', async (req,res) => {
+    console.log('GetGameReviews endpoint hit!');
+    const { appId } = req.body;
+    const response = await fetch(`https://store.steampowered.com/appreviews/${appId}?json=1&cc=us`);
+    const Data = await response.json();
+    console.log('Game reviews fetched:', Data);
+    res.json({ status: 'success', reviews: Data||null });
+});
+
 app.post('/getSteamLib', async (req, res) => {
     console.log('GetSteamLib endpoint hit!');
 
@@ -91,7 +111,20 @@ app.post('/getSteamLib', async (req, res) => {
     try {
         const response = await fetch(url);
         const data = await response.json();
-        res.json(data);
+
+        const games = data.response?.games || [];
+
+        const transformedResponse = {
+            status: 'success',
+            recommendations: games.map(game => ({
+                GameID: game.appid,
+                Name: game.name,
+                playtime_forever: game.playtime_forever,
+                image: game.img_icon_url
+            }))
+        };
+
+        res.json(transformedResponse);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Steam API failed" });
@@ -107,10 +140,11 @@ app.post("/searchGame", async (req, res) => {
 
     const IDs = data.items.map(item => item.id);
 
+    // 👇 Match key name with Flask
     const responsePython = await fetch(`${PYTHON_SERVICE_URL}/searchGames`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ appIds: IDs })
+        body: JSON.stringify({ appIds: IDs }) // was listIDs before
     });
 
     const dataPython = await responsePython.json();
@@ -139,6 +173,7 @@ app.post('/recommend', async (req, res) => {
     
     const { games } = req.body;
     
+    // Validation
     if (!games || !Array.isArray(games) || games.length === 0) {
         return res.status(400).json({ 
             status: 'error',
@@ -147,6 +182,7 @@ app.post('/recommend', async (req, res) => {
         });
     }
     try {
+        // Create abort controller for timeout
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
         
@@ -215,14 +251,17 @@ app.post('/recommend', async (req, res) => {
     }
 });
 
+// Health check
 app.get('/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// 404 handler
 app.use((req, res) => {
     res.status(404).json({ status: 'error', message: 'Not found' });
 });
 
+// Error handler
 app.use((err, req, res, next) => {
     console.error('Unhandled error:', err);
     res.status(500).json({ status: 'error', message: 'Internal server error' });
