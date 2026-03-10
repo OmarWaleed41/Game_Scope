@@ -78,6 +78,15 @@ app.post('/login', async (req,res) => {
     }
 });
 
+app.get('/trending', async (req,res) => {
+    console.log('Trending endpoint hit!');
+    const response = await fetch(`https://store.steampowered.com/search/results/?query&start=0&count=20&dynamic_data=&sort_by=_ASC&snr=1_7_7_7000_7&filter=popularnew&os=win&nopackages=1&json=1&cc=us`);
+    const Data = await response.json();
+    console.log('Trending games fetched:', Data);
+    const trendingGames = Data?.specials?.items || [];
+    res.json({ status: 'success', trending: trendingGames });
+});
+
 app.post('/getGameDetails', async (req,res) => {
     console.log('GetGameDetails endpoint hit!');
     const { appId } = req.body;
