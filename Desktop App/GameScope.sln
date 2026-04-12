@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameScope", "GameScope\GameScope.csproj", "{06C7E992-5BFC-492D-815C-9FCB65228E8B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{06C7E992-5BFC-492D-815C-9FCB65228E8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06C7E992-5BFC-492D-815C-9FCB65228E8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06C7E992-5BFC-492D-815C-9FCB65228E8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06C7E992-5BFC-492D-815C-9FCB65228E8B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DAD4A84A-1A17-4063-93FF-86B22072361B}
+	EndGlobalSection
+EndGlobal
