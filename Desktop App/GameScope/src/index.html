@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game Scope — Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=PT+Sans+Narrow:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+
+<!-- ═══════════ SIDEBAR ═══════════ -->
+<aside class="sidebar">
+  <div class="sidebar-content">
+    <div class="sidebar-header">
+      <div class="logo-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <div class="logo-text">Game Scope</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="nav-item active">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 7.5L10 2L18 7.5V17C18 17.55 17.55 18 17 18H13V12H7V18H3C2.45 18 2 17.55 2 17V7.5Z" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+        <span class="nav-text">Home</span>
+      </a>
+      <a href="library.html" class="nav-item">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="12" width="7" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="12" y="3" width="5" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="12" y="12" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+        <span class="nav-text">Library</span>
+      </a>
+      <a href="wishlist.html" class="nav-item">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </div>
+        <span class="nav-text">Wishlist</span>
+      </a>
+      <a href="#" class="nav-item">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+        <span class="nav-text">Settings</span>
+      </a>
+      <a href="#" class="nav-item">
+        <div class="nav-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M10 6v4l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <span class="nav-text">About</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="copyright">© 2024 Game Scope</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div class="main-content" id="scroll-container">
+
+  <!-- HEADER -->
+  <div class="header-container">
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <div class="search-bar">
+      <div class="search-icon"><img src="Uploads/search.svg" alt="" onerror="this.style.display='none'"></div>
+      <input type="text" class="search-input" placeholder="Search by name ..." />
+    </div>
+    <div class="header-controls">
+      <div class="language-selector">
+        <span class="language-text">English</span>
+        <img src="Uploads/arrowdown.svg" alt="" class="dropdown-arrow" onerror="this.style.display='none'">
+      </div>
+      <div class="icon-button notifications" id="notifBtn">
+        <img src="Uploads/notifications.svg" alt="" onerror="this.style.display='none'">
+        <div class="notification-dot"></div>
+      </div>
+      <div class="icon-button" id="themeToggleBtn">
+        <img src="Uploads/brightness.svg" alt="" onerror="this.style.display='none'">
+      </div>
+      <a href="profile.html" class="user-avatar">
+        <img src="Uploads/userphoto.jpg" alt="User" onerror="this.style.display='none'">
+      </a>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero-section" id="heroSection">
+    <!-- Dynamically filled with JS -->
+  </div>
+
+  <!-- Recommendations -->
+  <div class="recommendations-section">
+    <div class="section-head">
+      <div class="section-title">Recommendations for You</div>
+      <!-- <span class="see-all">See all →</span> -->
+    </div>
+    <div class="recommendations-grid" id="recommendationsGrid">
+        <!-- Dynamically filled with JS -->
+    </div>
+  </div>
+
+  <!-- BROWSE BY CATEGORY -->
+  <div class="categories-section">
+    <div class="section-head">
+      <div class="section-title">Browse by Category</div>
+    </div>
+    <div class="categories-scroll">
+      <div class="category-card">Classic</div>
+      <div class="category-card">Strategy</div>
+      <div class="category-card">RPG</div>
+      <div class="category-card">Indie</div>
+      <div class="category-card">Story</div>
+      <div class="category-card">Action</div>
+      <div class="category-card">Sports</div>
+      <div class="category-card">Horror</div>
+      <div class="category-card">Simulation</div>
+    </div>
+  </div>
+
+  <!-- FILTER TABS -->
+  <div class="filter-row">
+    <div class="filter-tabs" id="filterTabs">
+      <button class="filter-tab active" data-tab="onsale">On Sale</button>
+      <button class="filter-tab" data-tab="freebies">Freebies</button>
+      <button class="filter-tab" data-tab="topsellers">Top Sellers</button>
+      <button class="filter-tab" data-tab="toprated">Top Rated</button>
+      <button class="filter-tab" data-tab="newrelease">New Release</button>
+      <button class="filter-tab" data-tab="upcoming">Upcoming</button>
+    </div>
+  </div>
+
+  <!-- GAMES GRID (tab content) -->
+  <div class="games-section">
+    <div class="carousel-wrap">
+      <button class="c-arrow left" id="gamesLeft">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="games-grid" id="gamesGrid">
+          <!-- Dynamically filled with JS -->
+      </div>
+      <button class="c-arrow right" id="gamesRight">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- FOR YOU -->
+  <div class="games-section">
+    <div class="section-head">
+      <div class="section-title">For You</div>
+    </div>
+    <div class="carousel-wrap">
+      <button class="c-arrow left">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="games-grid">
+        <div class="game-tile">
+          <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1085660/header.jpg"
+               onerror="this.src='https://placehold.co/400x267/1a1a24/532494?text=Call+of+Duty'"/>
+        </div>
+        <div class="game-tile">
+          <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1250410/header.jpg"
+               onerror="this.src='https://placehold.co/400x267/1a1a24/532494?text=Alan+Wake+2'"/>
+        </div>
+        <div class="game-tile">
+          <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2139460/header.jpg"
+               onerror="this.src='https://placehold.co/400x267/1a1a24/532494?text=Where+Winds+Meet'"/>
+        </div>
+        <div class="game-tile">
+          <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/header.jpg"
+               onerror="this.src='https://placehold.co/400x267/1a1a24/532494?text=Elden+Ring'"/>
+        </div>
+        <div class="game-tile">
+          <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/489830/header.jpg"
+               onerror="this.src='https://placehold.co/400x267/1a1a24/532494?text=Skyrim'"/>
+        </div>
+        <div class="game-tile">
+          <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1895880/header.jpg"
+               onerror="this.src='https://placehold.co/400x267/1a1a24/532494?text=Ratchet'"/>
+        </div>
+      </div>
+      <button class="c-arrow right">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-banner">
+    <div class="cta-icon-wrap">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    </div>
+    <div class="cta-title">Discover Your Next Obsession</div>
+    <p class="cta-desc">Explore thousands of games across all genres and platforms. Your perfect game is waiting.</p>
+    <button class="cta-btn">Explore All Games</button>
+  </div>
+
+</div><!-- /main -->
+
+<script src="index.js" type="module"></script>
+</body>
+</html>
