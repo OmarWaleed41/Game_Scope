@@ -1,3 +1,9 @@
+const socket = io('http://localhost:3001');
+
+socket.on('steam-auth-success', ({ steamID }) => {
+  console.log('Got Steam ID:', steamID);
+  // do whatever you need with it
+});
 /* ═══════════════════════════════════════════════
    ROUTER
 ═══════════════════════════════════════════════ */
@@ -255,11 +261,28 @@ function loadLocalLibrary() {
 }
 
 // Central C# message listener
-window.addEventListener('hostMessage', (e) => {
+window.addEventListener('hostMessage', async(e) => {
   const msg = e.detail;
   if (msg.type === 'localGameAdded') {
     if (msg.success) { libAllGames.push(msg.game); libRender(); }
     else console.error('Failed to add local game:', msg.error);
+  }
+  else if (msg.type === 'epicLibrary') {
+    if (msg.data) {
+      let games = [];
+      msg.data.forEach(game => {
+          // console.log('Received enriched Epic game:', game);
+          games.push({ name: game.app_title, dev: game.Developer });
+      });
+      console.log('Enriched Epic games:', games);
+
+      const res = await fetch(`http://localhost:3001/getEpicLib`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ EpicGames: games })
+      });
+      const data = await res.json();
+      console.log('Received enriched Epic library:', data);
+    }
   }
 });
 
@@ -403,19 +426,35 @@ async function initLibrary() {
   } catch (err) {
     console.error('Failed to load local games:', err);
   }
+}
 
-  // 2. Steam libraries for each user ID
+
+document.getElementById('addLocalBtn').addEventListener('click', () => {
+  // Handle add local game functionality
+  // libRender();
+});
+document.getElementById('addEpicLib').addEventListener('click', () => {
+  window.chrome?.webview?.postMessage({ type: 'epicLogin' });
+  // libRender();
+});
+document.getElementById('addSteamLib').addEventListener('click', async () => {
+  window.chrome.webview.postMessage({ 
+      type: 'openBrowser',
+      url: 'http://localhost:3001/auth/steam' 
+  });
+
   for (const userId of LIB_USER_IDS) {
     try {
       const data = await fetchLibrary(userId);
+      console.log(`Loaded Steam library for ${userId}:`, data);
       libAllGames.push(...data);
       libRender();
     } catch (err) {
       console.error(`Failed to load Steam library for ${userId}:`, err);
     }
   }
-}
-
+  // libRender();
+});
 document.getElementById('gridViewBtn').addEventListener('click', () => {
   libCurrentView = 'grid';
   document.getElementById('gridViewBtn').classList.add('active');
