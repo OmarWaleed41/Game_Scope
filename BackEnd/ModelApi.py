@@ -84,6 +84,10 @@ def train_and_cache():
     df = pd.read_csv("games.csv", encoding='utf-8', low_memory=False, 
                     usecols=columns_needed)
 
+    print(df['Name'].value_counts().head(20))
+    print(f"\nTotal unique Names: {df['Name'].nunique()}")
+    print(f"\nSample Names:\n{df['Name'].head(20).tolist()}")
+
     print("\n Available columns:")
     print(df.columns.tolist())
     print()
@@ -107,6 +111,17 @@ def train_and_cache():
     df['total_reviews'] = df['actual_positive'] + df['actual_negative']
     df['positive_ratio'] = df['actual_positive'] / (df['total_reviews'] + 1)
 
+    print(f"Total rows before filter: {len(df)}")
+    print(f"actual_positive sample:\n{df['actual_positive'].value_counts().head(10)}")
+    print(f"actual_negative sample:\n{df['actual_negative'].value_counts().head(10)}")
+    print(f"total_reviews distribution:\n{df['total_reviews'].describe()}")
+    print(f"Games with 0 total_reviews: {(df['total_reviews'] == 0).sum()}")
+    print(f"Games >= 700 reviews: {(df['total_reviews'] >= 700).sum()}")
+    print(f"After dedup: {df.drop_duplicates(subset=['Name']).shape[0]}")
+
+    for threshold in [100, 200, 300, 500, 700]:
+        count = (df['total_reviews'] >= threshold).sum()
+        print(f"MIN_REVIEWS={threshold}: {count} games")
     # Filter
     MIN_REVIEWS = 700 # minimum number of reviews to be included (will have lesser games the higher this is)
     """some of the games in the dataset are very obscure with very few reviews
@@ -206,7 +221,7 @@ def train_and_cache():
     embedding_normalized = normalize(embedding_matrix, norm='l2', axis=1)
 
     # combine: 50% TF-IDF (exact matches) + 50% embeddings (semantic similarity)
-    # i see this is the perfect balance for our use case since we are now almost identical to the Steam recommendation engine 
+    # i see this is the perfect balance for our use case since we are now identical to the Steam recommendation engine and even better most of the time
 
     TFIDF_WEIGHT = 0.5
     EMBEDDING_WEIGHT = 0.5
@@ -214,8 +229,8 @@ def train_and_cache():
     # convert to dense for combination (or use sparse operations if memory is an issue)(thank god we have enough RAM)
     print("   Combining TF-IDF and embeddings...")
     hybrid_matrix = np.hstack([
-        tfidf_normalized.toarray() * TFIDF_WEIGHT,
-        embedding_normalized * EMBEDDING_WEIGHT
+        tfidf_normalized.toarray().astype(np.float32) * np.float32(TFIDF_WEIGHT),
+        embedding_normalized.astype(np.float32) * np.float32(EMBEDDING_WEIGHT)
     ])
 
     print(f"    Hybrid matrix shape: {hybrid_matrix.shape}")
@@ -236,8 +251,22 @@ def train_and_cache():
             'tfidf_matrix': tfidf_matrix,
             'embedding_matrix': embedding_matrix,
             'hybrid_matrix': hybrid_matrix,
-            'knn': knn
+            'knn': knn,
+            'tfidf': tfidf,
+            'semantic_model': model
         }, f)
+
+# Build this once, outside recommend_games, right after df_filtered is ready
+def build_name_index(df):
+    """Pre-compute word → row indices for fast matching"""
+    index = {}
+    for pos, (idx, row) in enumerate(df.iterrows()):
+        words = set(row['Name'].lower().split())
+        for word in words:
+            if word not in index:
+                index[word] = []
+            index[word].append((pos, idx, row['Name']))
+    return index
 
 try:
     with open(CACHE_FILE, "rb") as f:
@@ -248,6 +277,10 @@ try:
         embedding_matrix = model_data['embedding_matrix']
         hybrid_matrix = model_data['hybrid_matrix']
         knn = model_data['knn']
+        tfidf = model_data['tfidf']
+        sentence_model = model_data['semantic_model']
+
+    name_index = build_name_index(df_filtered)
     print("Loaded model from cache.")
 except FileNotFoundError:
     train_and_cache()
@@ -258,36 +291,42 @@ except FileNotFoundError:
         embedding_matrix = model_data['embedding_matrix']
         hybrid_matrix = model_data['hybrid_matrix']
         knn = model_data['knn']
+        tfidf = model_data['tfidf']
+        sentence_model = model_data['semantic_model']
     print("Loaded model After training.")
 
 def recommend_games(library, top_k=30, diversity_penalty=0.0, quality_boost=0.5, popularity_threshold_boost=True):
-    """Hybrid KNN recommendation system using TF-IDF + embeddings"""
-    library_lower = [g.lower().strip() for g in library]
-    
-    idxs = []
-    found_games = []
+    flat_library = []
+    for item in library:
+        if isinstance(item, list):
+            flat_library.extend([g for g in item if g and isinstance(g, str)])
+        elif item and isinstance(item, str):
+            flat_library.append(item)
 
+    if not flat_library:
+        return pd.DataFrame()
+
+    library_lower = [g.lower().strip() for g in flat_library]
+
+    idxs = []
     print(" Matching your games:")
     for game in library_lower:
-        best_match = None
-        best_score = 0
-        
-        for idx, row in df_filtered.iterrows():
-            name = row['Name'].lower()
-            game_words = set(game.split())
-            name_words = set(name.split())
-            overlap = len(game_words & name_words)
-            
-            if overlap > best_score:
-                best_score = overlap
-                best_match = (idx, row['Name'])
-        
-        if best_match and best_score >= 1:
-            idx, name = best_match
-            idx_filtered = df_filtered.index.get_loc(idx)
-            idxs.append(idx_filtered)
-            found_games.append(name)
-            print(f"    {name}")
+        game_words = set(game.split())
+        candidate_scores = {}
+        for word in game_words:
+            for pos, idx, name in name_index.get(word, []):
+                if pos not in candidate_scores:
+                    candidate_scores[pos] = {'score': 0, 'idx': idx, 'name': name}
+                candidate_scores[pos]['score'] += 1
+
+        if not candidate_scores:
+            print(f"    '{game}' not found")
+            continue
+
+        best = max(candidate_scores.values(), key=lambda x: x['score'])
+        if best['score'] >= 1:
+            idxs.append(df_filtered.index.get_loc(best['idx']))
+            print(f"    {best['name']}")
         else:
             print(f"    '{game}' not found")
 
@@ -295,19 +334,22 @@ def recommend_games(library, top_k=30, diversity_penalty=0.0, quality_boost=0.5,
         print("\n No games found!\n")
         return pd.DataFrame()
 
-    # Collect KNN neighbors for each game using hybrid similarity
+    # ── ONE batched KNN call instead of one per game ──────────────────
+    lib_vectors = hybrid_matrix[idxs]                          # (n_games, n_features)
+    distances, neighbors = knn.kneighbors(lib_vectors)         # single matrix op
+
     scores = {}
-    for lib_idx in idxs:
-        distances, neighbors = knn.kneighbors([hybrid_matrix[lib_idx]])
-        for dist, n_idx in zip(distances[0], neighbors[0]):
+    for game_distances, game_neighbors in zip(distances, neighbors):
+        for dist, n_idx in zip(game_distances, game_neighbors):
             if n_idx not in idxs:
                 sim = 1 - dist
                 scores[n_idx] = scores.get(n_idx, 0) + sim
+    # ─────────────────────────────────────────────────────────────────
 
     if not scores:
         print("\n No neighbor results found!\n")
         return pd.DataFrame()
-    
+
     sorted_candidates = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     candidates = [i for i, _ in sorted_candidates][:min(len(sorted_candidates), top_k * 4)]
 
@@ -379,6 +421,105 @@ def recommend_games(library, top_k=30, diversity_penalty=0.0, quality_boost=0.5,
 
     result['score'] = [scores[i] for i in selected]
     result = result.sort_values('score', ascending=False)
+    return result
+
+def recommend_by_description(description, tags="", genres="", top_k=30, 
+                              diversity_penalty=0.0, quality_boost=0.5, 
+                              popularity_threshold_boost=True):
+    """Recommend games based on a free-text description + optional tags/genres.
+    Useful for games not in the dataset (e.g. post-2025 releases).
+    """
+    if not description.strip() and not tags.strip() and not genres.strip():
+        print("\n No input provided!\n")
+        return pd.DataFrame()
+
+    combined_text = f"{tags}. {genres}. {description}".strip(". ")
+    print(f"Encoding description: {combined_text[:100]}...")
+    desc_embedding = sentence_model.encode([combined_text])
+    desc_embedding_norm = normalize(desc_embedding, norm='l2')
+
+    tags_proc    = preprocess_field_smart(tags, weight=5, boost_core=True)
+    genres_proc  = preprocess_field(genres, weight=4)
+    desc_proc    = preprocess_field(description, weight=3)
+    combined_tfidf_text = f"{tags_proc} {genres_proc} {desc_proc}".strip()
+
+    desc_tfidf      = tfidf.transform([combined_tfidf_text])
+    desc_tfidf_norm = normalize(desc_tfidf, norm='l2').toarray()
+
+    query_vector = np.hstack([
+        desc_tfidf_norm.astype(np.float32) * np.float32(0.5),
+        desc_embedding_norm.astype(np.float32) * np.float32(0.5)
+    ])
+
+    distances, neighbors = knn.kneighbors(query_vector)
+    scores = {}
+    for dist, n_idx in zip(distances[0], neighbors[0]):
+        sim = 1 - dist
+        scores[n_idx] = sim
+
+    if not scores:
+        print("\n No neighbor results found!\n")
+        return pd.DataFrame()
+
+    sorted_candidates = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    candidates = [i for i, _ in sorted_candidates][:min(len(sorted_candidates), top_k * 4)]
+
+    review_quality     = df_filtered['positive_ratio'].values
+    raw_popularity     = df_filtered['actual_positive'].values
+    total_reviews      = df_filtered['total_reviews'].values
+
+    popularity            = np.log1p(raw_popularity)
+    popularity_normalized = popularity / (popularity.max() + 1e-10)
+    quality_score         = review_quality * 0.6 + popularity_normalized * 0.4
+
+    for i in range(len(candidates)):
+        base_sim         = scores[candidates[i]]
+        q                = quality_score[candidates[i]]
+        quality_multiplier = 1 + (quality_boost * (q ** 1.5))
+
+        if popularity_threshold_boost:
+            reviews   = total_reviews[candidates[i]]
+            pos_ratio = review_quality[candidates[i]]
+
+            if   reviews >= 100000 and pos_ratio >= 0.90: quality_multiplier *= 1.8
+            elif reviews >= 50000  and pos_ratio >= 0.90: quality_multiplier *= 1.6
+            elif reviews >= 20000  and pos_ratio >= 0.90: quality_multiplier *= 1.4
+            elif reviews >= 10000  and pos_ratio >= 0.90: quality_multiplier *= 1.2
+
+        scores[candidates[i]] = base_sim * quality_multiplier
+
+    candidates = sorted(candidates, key=lambda x: scores[x], reverse=True)
+
+    dev_counts, genre_counts, selected = {}, {}, []
+    max_per_dev   = max(8, int(top_k * 0.35)) if diversity_penalty > 0 else 999
+    max_per_genre = int(top_k * 0.4)          if diversity_penalty > 0 else 999
+
+    for idx in candidates:
+        if len(selected) >= top_k:
+            break
+
+        dev = str(df_filtered.iloc[idx]['developers']).split(',')[0].strip()
+        if diversity_penalty > 0 and dev:
+            if dev_counts.get(dev, 0) >= max_per_dev:
+                continue
+            dev_counts[dev] = dev_counts.get(dev, 0) + 1
+
+        genres_list = str(df_filtered.iloc[idx]['simple_genres']).split(',')
+        main_genre  = genres_list[0].strip() if genres_list else "Other"
+        if diversity_penalty > 0:
+            if genre_counts.get(main_genre, 0) >= max_per_genre:
+                continue
+            genre_counts[main_genre] = genre_counts.get(main_genre, 0) + 1
+
+        selected.append(idx)
+
+    result = df_filtered.iloc[selected][[
+        'AppID', 'Name', 'total_reviews', 'actual_positive',
+        'actual_negative', 'positive_ratio', 'game_image'
+    ]].copy()
+
+    result['score'] = [scores[i] for i in selected]
+    result = result.sort_values('score', ascending=False)
 
     return result
 
@@ -427,8 +568,41 @@ def recommend_endpoint():
     )
 
     recommendations_list = recommendations.to_dict(orient='records')
-
+    print(f'recos : {recommendations_list}')
     return jsonify(recommendations_list)
 
+
+#   description: desc, genres: genres, tags: tags
+@app.route('/recommend_by_description', methods=['POST'])
+def recommend_by_description_endpoint():
+    # print("by desc endpoint")
+
+    data = request.get_json()
+    
+    # Validation: Don't move forward on bad data
+    if not data:
+        return {"error": "Missing request body"}, 400
+
+    desc = data.get("description", "")
+    genres = data.get("genres", [])
+    tags = data.get("tags", [])
+
+    if isinstance(genres, list):
+        genres = ", ".join(genres)
+    if isinstance(tags, list):
+        tags = ", ".join(tags)
+    # print(f"DEBUG: {desc} | {genres} | {tags}")
+    recommendations = recommend_by_description(
+        description = desc,
+        tags = tags,
+        genres= genres,
+        top_k=80,
+        diversity_penalty=0,
+        quality_boost=0.5,
+        popularity_threshold_boost=True
+    )
+    # print(recommendations[['Name', 'score']].head(20))
+    
+    return jsonify({"status": "success", "recommendations": recommendations.head(20).to_dict(orient='records')})
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
