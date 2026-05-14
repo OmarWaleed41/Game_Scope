@@ -1,0 +1,144 @@
+-- --------------------------------------------------------
+-- Host:                         DESKTOP-2KOK3LB\SQLEXPRESS
+-- Server version:               Microsoft SQL Server 2025 (RTM) - 17.0.1000.7
+-- Server OS:                    Windows 10 Pro 10.0 <X64> (Build 26100: )
+-- HeidiSQL Version:             12.17.0.7270
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES  */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+-- Dumping structure for table game_scope.games
+CREATE TABLE IF NOT EXISTS "games" (
+	"id" INT,
+	"steam_appid" INT DEFAULT NULL,
+	"game_name" NVARCHAR(255) COLLATE SQL_Latin1_General_CP1_CI_AS,
+	"developer" NVARCHAR(255) DEFAULT NULL COLLATE SQL_Latin1_General_CP1_CI_AS,
+	"publisher" NVARCHAR(255) DEFAULT NULL COLLATE SQL_Latin1_General_CP1_CI_AS,
+	"header_image" NVARCHAR(512) DEFAULT NULL COLLATE SQL_Latin1_General_CP1_CI_AS,
+	"created_at" DATETIME2(7) DEFAULT N'sysutcdatetime()',
+	PRIMARY KEY ("id"),
+	UNIQUE INDEX "UQ_games_steam_appid" ("steam_appid")
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table game_scope.review_likes
+CREATE TABLE IF NOT EXISTS "review_likes" (
+	"review_id" INT,
+	"user_id" INT,
+	"liked_at" DATETIME2(7) DEFAULT N'sysutcdatetime()',
+	FOREIGN KEY INDEX "FK_rlike_review" ("review_id"),
+	FOREIGN KEY INDEX "FK_rlike_user" ("user_id"),
+	PRIMARY KEY ("review_id", "user_id"),
+	CONSTRAINT "FK_rlike_user" FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON UPDATE NO_ACTION ON DELETE NO_ACTION,
+	CONSTRAINT "FK_rlike_review" FOREIGN KEY ("review_id") REFERENCES "reviews" ("id") ON UPDATE NO_ACTION ON DELETE CASCADE
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table game_scope.reviews
+CREATE TABLE IF NOT EXISTS "reviews" (
+	"id" INT,
+	"user_id" INT,
+	"game_id" INT,
+	"rating" TINYINT,
+	"title" NVARCHAR(255) DEFAULT NULL COLLATE SQL_Latin1_General_CP1_CI_AS,
+	"body" NVARCHAR(max) DEFAULT NULL COLLATE SQL_Latin1_General_CP1_CI_AS,
+	"is_public" BIT DEFAULT N'(1)',
+	"likes" INT DEFAULT N'(0)',
+	"created_at" DATETIME2(7) DEFAULT N'sysutcdatetime()',
+	"updated_at" DATETIME2(7) DEFAULT N'sysutcdatetime()',
+	FOREIGN KEY INDEX "FK_reviews_game" ("game_id"),
+	FOREIGN KEY INDEX "FK_reviews_user" ("user_id"),
+	PRIMARY KEY ("id"),
+	UNIQUE INDEX "UQ_reviews_one_per" ("game_id", "user_id"),
+	CONSTRAINT "FK_reviews_user" FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON UPDATE NO_ACTION ON DELETE CASCADE,
+	CONSTRAINT "FK_reviews_game" FOREIGN KEY ("game_id") REFERENCES "games" ("id") ON UPDATE NO_ACTION ON DELETE CASCADE,
+	CONSTRAINT "CK_reviews_rating" CHECK (([rating]>=(1) AND [rating]<=(5)))
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table game_scope.user_library
+CREATE TABLE IF NOT EXISTS "user_library" (
+	"id" INT,
+	"user_id" INT,
+	"game_id" INT,
+	"platform" NVARCHAR(32) DEFAULT N'''steam''' COLLATE SQL_Latin1_General_CP1_CI_AS,
+	"play_time_mins" INT DEFAULT N'(0)',
+	"is_favorite" BIT DEFAULT N'(0)',
+	"last_played_at" DATETIME2(7) DEFAULT NULL,
+	"added_at" DATETIME2(7) DEFAULT N'sysutcdatetime()',
+	FOREIGN KEY INDEX "FK_user_library_game" ("game_id"),
+	FOREIGN KEY INDEX "FK_user_library_user" ("user_id"),
+	PRIMARY KEY ("id"),
+	UNIQUE INDEX "UQ_user_library_entry" ("game_id", "platform", "user_id"),
+	CONSTRAINT "FK_user_library_user" FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON UPDATE NO_ACTION ON DELETE CASCADE,
+	CONSTRAINT "FK_user_library_game" FOREIGN KEY ("game_id") REFERENCES "games" ("id") ON UPDATE NO_ACTION ON DELETE CASCADE,
+	CONSTRAINT "CK_user_library_platform" CHECK (([platform]='local' OR [platform]='epic' OR [platform]='steam'))
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table game_scope.user_steam_accounts
+CREATE TABLE IF NOT EXISTS "user_steam_accounts" (
+	"id" INT,
+	"user_id" INT,
+	"steam_id" NVARCHAR(32) COLLATE SQL_Latin1_General_CP1_CI_AS,
+	"display_name" NVARCHAR(128) DEFAULT NULL COLLATE SQL_Latin1_General_CP1_CI_AS,
+	"avatar_url" NVARCHAR(512) DEFAULT NULL COLLATE SQL_Latin1_General_CP1_CI_AS,
+	"linked_at" DATETIME2(7) DEFAULT N'sysutcdatetime()',
+	FOREIGN KEY INDEX "FK_steam_accounts_user" ("user_id"),
+	PRIMARY KEY ("id"),
+	UNIQUE INDEX "UQ_steam_accounts_steam_id" ("steam_id"),
+	CONSTRAINT "FK_steam_accounts_user" FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON UPDATE NO_ACTION ON DELETE CASCADE
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table game_scope.users
+CREATE TABLE IF NOT EXISTS "users" (
+	"id" INT,
+	"username" NVARCHAR(64) COLLATE SQL_Latin1_General_CP1_CI_AS,
+	"email" NVARCHAR(255) COLLATE SQL_Latin1_General_CP1_CI_AS,
+	"password_hash" NVARCHAR(255) COLLATE SQL_Latin1_General_CP1_CI_AS,
+	"avatar_url" NVARCHAR(512) DEFAULT NULL COLLATE SQL_Latin1_General_CP1_CI_AS,
+	"two_fa_enabled" BIT DEFAULT N'(0)',
+	"two_fa_secret" NVARCHAR(255) DEFAULT NULL COLLATE SQL_Latin1_General_CP1_CI_AS,
+	"created_at" DATETIME2(7) DEFAULT N'sysutcdatetime()',
+	"updated_at" DATETIME2(7) DEFAULT N'sysutcdatetime()',
+	PRIMARY KEY ("id"),
+	UNIQUE INDEX "UQ_users_email" ("email"),
+	UNIQUE INDEX "UQ_users_username" ("username")
+);
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table game_scope.wishlist
+CREATE TABLE IF NOT EXISTS "wishlist" (
+	"id" INT,
+	"user_id" INT,
+	"game_id" INT,
+	"added_at" DATETIME2(7) DEFAULT N'sysutcdatetime()',
+	"notify_sale" BIT DEFAULT N'(1)',
+	FOREIGN KEY INDEX "FK_wishlist_game" ("game_id"),
+	FOREIGN KEY INDEX "FK_wishlist_user" ("user_id"),
+	PRIMARY KEY ("id"),
+	UNIQUE INDEX "UQ_wishlist_entry" ("game_id", "user_id"),
+	CONSTRAINT "FK_wishlist_user" FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON UPDATE NO_ACTION ON DELETE CASCADE,
+	CONSTRAINT "FK_wishlist_game" FOREIGN KEY ("game_id") REFERENCES "games" ("id") ON UPDATE NO_ACTION ON DELETE CASCADE
+);
+
+-- Data exporting was unselected.
+
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
