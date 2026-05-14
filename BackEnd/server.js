@@ -240,16 +240,113 @@ app.use((req, _res, next) => {
 
 // ─── Routes ──────────────────────────────────────────────────────────────────
 
-// Auth
-app.get('/auth/steam', passport.authenticate('steam'));
+// ─── Routes ──────────────────────────────────────────────────────────────────
+
+const pendingSteamLinks = new Map();
+const userSockets = new Map(); // userId → socketId
+
+io.on('connection', (socket) => {
+    socket.on('register', (userId) => {
+        if (userId) userSockets.set(String(userId), socket.id);
+    });
+    socket.on('disconnect', () => {
+        for (const [uid, sid] of userSockets) {
+            if (sid === socket.id) { userSockets.delete(uid); break; }
+        }
+    });
+});
+
+app.get('/auth/steam', (req, res) => {
+    const appToken = req.query.token;
+    const socketId = req.query.socketId;
+
+    if (!appToken) return res.status(401).send("Missing authentication token.");
+
+    try {
+        const decoded = jwt.verify(appToken, JWT_SECRET);
+        const state = require('crypto').randomBytes(16).toString('hex');
+
+        pendingSteamLinks.set(state, {
+            userId:    decoded.userId,
+            socketId:  socketId || null,
+            expiresAt: Date.now() + 10 * 60 * 1000,
+        });
+
+        // ✅ Embed state directly in the returnURL — no session needed
+        const returnURL = `http://localhost:${PORT}/auth/steam/return?state=${state}`;
+
+        passport.use(new SteamStrategy(
+            {
+                returnURL,
+                realm:  `http://localhost:${PORT}/`,
+                apiKey: STEAM_API_KEY,
+            },
+            (_identifier, profile, done) => done(null, profile),
+        ));
+
+        passport.authenticate('steam')(req, res, () => {});
+    } catch (err) {
+        return res.status(403).send("Invalid or expired token.");
+    }
+});
 
 app.get(
     '/auth/steam/return',
-    passport.authenticate('steam', { failureRedirect: '/' }),
-    (req, res) => {
-        if (req.isAuthenticated()) {
-            io.emit('steam-auth-success', { steamID: req.user.id });
+    (req, res, next) => {
+        // ✅ Reconstruct the strategy with the same returnURL Steam used
+        // (must match exactly what was passed to returnURL above)
+        const state     = req.query.state;
+        const returnURL = `http://localhost:${PORT}/auth/steam/return?state=${state}`;
+
+        passport.use(new SteamStrategy(
+            {
+                returnURL,
+                realm:  `http://localhost:${PORT}/`,
+                apiKey: STEAM_API_KEY,
+            },
+            (_identifier, profile, done) => done(null, profile),
+        ));
+
+        passport.authenticate('steam', { failureRedirect: '/', session: false })(req, res, next);
+    },
+    async (req, res) => {
+        const steamID = req.user?.id;
+        const state   = req.query.state;
+        let userId    = null;
+        let socketId  = null;
+
+        if (state && pendingSteamLinks.has(state)) {
+            const entry = pendingSteamLinks.get(state);
+            pendingSteamLinks.delete(state);
+
+            if (entry.expiresAt > Date.now()) {
+                userId   = entry.userId;
+                socketId = entry.socketId ?? null;
+            }
         }
+
+        console.log(`Steam return — userId: ${userId}, steamID: ${steamID}`);
+
+        if (userId && steamID) {
+            try {
+                await sql.query`
+                    IF NOT EXISTS (SELECT 1 FROM user_steam_accounts WHERE user_id = ${userId} AND steam_id = ${steamID})
+                    INSERT INTO user_steam_accounts (user_id, steam_id) VALUES (${userId}, ${steamID})
+                `;
+                console.log(`✅ Linked Steam ${steamID} to user ${userId}`);
+            } catch (err) {
+                console.error('Failed to persist Steam account link:', err.message);
+            }
+        }
+
+        // Always use the live socket from userSockets — stored socketId may be stale
+        const targetSocket = userSockets.get(String(userId));
+        if (targetSocket) {
+            io.to(targetSocket).emit('steam-auth-success', { steamID, userId });
+        } else {
+            console.log(`No active socket found for userId ${userId}`);
+        }
+
         res.send('<h2>Steam login successful! You can close this tab.</h2>');
     },
 );
@@ -274,23 +371,22 @@ app.post('/login', async (req, res) => {
         if (!passwordOk)
             return res.status(401).json({ status: 'error', message: 'Invalid password' });
 
-        // 2FA already set up — ask for code
+        // 2FA enabled — ask for code
         if (user.two_fa_enabled) {
             return res.json({ status: '2fa_required', email: user.email });
         }
 
-        // First login — generate secret + QR
-        if (!user.two_fa_secret) {
-            const secret = speakeasy.generateSecret({ name: `GameScope (${email})` });
-            await sql.query`
-                UPDATE users SET two_fa_secret = ${secret.base32} WHERE id = ${user.id}
-            `;
-            const qrCode = await QRCode.toDataURL(secret.otpauth_url);
-            return res.json({ status: '2fa_setup', email: user.email, qrCode });
-        }
-
-        // Secret exists but not confirmed yet
-        return res.json({ status: '2fa_required', email: user.email });
+        // 2FA not enabled — issue JWT directly
+        const jwtToken = jwt.sign(
+            { userId: user.id, username: user.username, email: user.email },
+            JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+        return res.json({
+            status: 'success',
+            token: jwtToken,
+            user: { id: user.id, username: user.username, email: user.email },
+        });
 
     } catch (err) {
         console.error('Error in /login:', err);
@@ -360,6 +456,38 @@ app.post('/verify-2fa', async (req, res) => {
     }
 });
 
+// Optional 2FA setup (called from settings)
+app.post('/setup-2fa', requireAuth, async (req, res) => {
+    try {
+        const result = await sql.query`SELECT id, email, two_fa_enabled FROM users WHERE id = ${req.user.userId}`;
+        if (!result.recordset.length)
+            return res.status(404).json({ status: 'error', message: 'User not found' });
+
+        const user = result.recordset[0];
+        if (user.two_fa_enabled)
+            return res.status(400).json({ status: 'error', message: '2FA is already enabled' });
+
+        const secret = speakeasy.generateSecret({ name: `GameScope (${user.email})` });
+        await sql.query`UPDATE users SET two_fa_secret = ${secret.base32} WHERE id = ${user.id}`;
+        const qrCode = await QRCode.toDataURL(secret.otpauth_url);
+        res.json({ status: '2fa_setup', email: user.email, qrCode });
+    } catch (err) {
+        console.error('Error in /setup-2fa:', err);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+});
+
+// Disable 2FA
+app.post('/disable-2fa', requireAuth, async (req, res) => {
+    try {
+        await sql.query`UPDATE users SET two_fa_enabled = 0, two_fa_secret = NULL WHERE id = ${req.user.userId}`;
+        res.json({ status: 'success', message: '2FA disabled' });
+    } catch (err) {
+        console.error('Error in /disable-2fa:', err);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+});
+
 app.post('/signup', async (req, res) => {
     const { username, email, password } = req.body;
 
@@ -395,14 +523,19 @@ app.post('/logout', (_req, res) => {
     res.json({ success: true });
 });
 
-app.get('/me', (req, res) => {
+app.get('/me', async (req, res) => {
     const header = req.headers.authorization;
     if (!header?.startsWith('Bearer ')) {
         return res.json({ authenticated: false });
     }
     try {
-        const user = jwt.verify(header.slice(7), JWT_SECRET);
-        res.json({ authenticated: true, user });
+        const decoded = jwt.verify(header.slice(7), JWT_SECRET);
+        // Fetch live two_fa_enabled flag from DB so settings page reflects reality
+        const result = await sql.query`
+            SELECT two_fa_enabled FROM users WHERE id = ${decoded.userId}
+        `;
+        const two_fa_enabled = result.recordset[0]?.two_fa_enabled ?? false;
+        res.json({ authenticated: true, user: { ...decoded, two_fa_enabled } });
     } catch {
         res.json({ authenticated: false });
     }
@@ -419,11 +552,6 @@ app.post('/getSteamLib', async (req, res) => {
     }
 
     try {
-        await sql.query`
-            IF NOT EXISTS (SELECT 1 FROM user_steam_accounts WHERE user_id = ${userId} AND steam_id = ${steamId})
-            INSERT INTO user_steam_accounts (user_id, steam_id)
-            VALUES (${userId}, ${steamId})
-        `;
         const response = await fetch(
             `https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${STEAM_API_KEY}&steamid=${steamId}&include_appinfo=1&include_played_free_games=1&appids_filter=0`,
         );
@@ -435,29 +563,55 @@ app.post('/getSteamLib', async (req, res) => {
 
         const games = data.response.games;
         console.log(`found ${games.length} games...`);
-        for (const game of games) {
-            await sql.query`
+
+        // Batched approach: process in chunks of 50 to reduce round-trips
+        const BATCH_SIZE = 50;
+        for (let i = 0; i < games.length; i += BATCH_SIZE) {
+            const batch = games.slice(i, i + BATCH_SIZE);
+
+            // Upsert games in batch using Promise.all for concurrent execution
+            await Promise.all(batch.map(game => sql.query`
                 IF NOT EXISTS (SELECT 1 FROM games WHERE steam_appid = ${game.appid})
                 INSERT INTO games (steam_appid, game_name)
                 VALUES (${game.appid}, ${game.name})
-            `;
+            `));
 
-            const result = await sql.query`
-                SELECT id FROM games WHERE steam_appid = ${game.appid}
-            `;
-            const gameId = result.recordset[0].id;
+            // Fetch all game IDs for this batch in one query.
+            // mssql tagged templates treat the whole interpolation as one param,
+            // so a joined string won't work for IN — use a typed Request instead.
+            const appIds = batch.map(g => g.appid);
+            const inReq = new sql.Request();
+            appIds.forEach((id, idx) => inReq.input(`id${idx}`, sql.Int, id));
+            const paramList = appIds.map((_, idx) => `@id${idx}`).join(', ');
+            const idResult = await inReq.query(
+                `SELECT id, steam_appid FROM games WHERE steam_appid IN (${paramList})`
+            );
+            const idMap = new Map(idResult.recordset.map(r => [r.steam_appid, r.id]));
 
-            await sql.query`
-                IF NOT EXISTS (
-                    SELECT 1 FROM user_library
-                    WHERE user_id = ${userId} AND game_id = ${gameId}
-                )
-                INSERT INTO user_library (user_id, game_id, platform, play_time_mins)
-                VALUES (${userId}, ${gameId}, 'steam', ${game.playtime_forever})
-            `;
+            // Batch insert into user_library concurrently
+            await Promise.all(batch.map(async (game) => {
+                const gameId = idMap.get(game.appid);
+                if (!gameId) return;
+                await sql.query`
+                    IF NOT EXISTS (
+                        SELECT 1 FROM user_library
+                        WHERE user_id = ${userId} AND game_id = ${gameId}
+                    )
+                    INSERT INTO user_library (user_id, game_id, platform, play_time_mins)
+                    VALUES (${userId}, ${gameId}, 'steam', ${game.playtime_forever})
+                `;
+            }));
+
+            console.log(`Processed ${Math.min(i + BATCH_SIZE, games.length)}/${games.length} Steam games`);
         }
 
         res.json({ success: true, totalGames: games });
+
+        // Notify the user's socket that library is ready to reload
+        const userSocketId = userSockets.get(String(userId));
+        if (userSocketId) {
+            io.to(userSocketId).emit('library-sync-complete', { userId });
+        }
     } catch (err) {
         console.error('Error in /getSteamLib:', err);
         res.status(500).json({ error: 'Failed to save Steam library', details: err.message });
@@ -578,6 +732,38 @@ app.post('/userLibrary', async (req, res) => {
     }
 });
 
+// Linked Steam accounts
+app.get('/getLinkedAccounts', requireAuth, async (req, res) => {
+    try {
+        console.log(`Fetching Steam accounts for userId: ${req.user.userId}`);
+        const result = await sql.query`
+            SELECT steam_id FROM user_steam_accounts WHERE user_id = ${req.user.userId}
+        `;
+        const steamIds = result.recordset.map(r => r.steam_id);
+        console.log(`Found ${steamIds.length} Steam accounts`);
+        res.json({ success: true, steamIds });
+    } catch (err) {
+        console.error('Error in /getLinkedAccounts:', err);
+        res.status(500).json({ success: false, error: 'Failed to fetch linked accounts' });
+    }
+});
+
+// Unlink a Steam account
+app.post('/unlinkSteamAccount', requireAuth, async (req, res) => {
+    const { steamId } = req.body;
+    if (!steamId) return res.status(400).json({ success: false, error: 'Missing steamId' });
+    try {
+        await sql.query`
+            DELETE FROM user_steam_accounts
+            WHERE user_id = ${req.user.userId} AND steam_id = ${steamId}
+        `;
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Error in /unlinkSteamAccount:', err);
+        res.status(500).json({ success: false, error: 'Failed to unlink account' });
+    }
+});
+
 // games data endpoints
 app.get('/trending', async (_req, res) => {
     try {
@@ -614,6 +800,57 @@ app.get('/sales', async (_req, res) => {
     }
 });
 
+app.get('/topsellers', async (_req, res) => {
+    try {
+        const response = await fetch(
+            'https://store.steampowered.com/search/results/?query&start=0&count=20&sort_by=Revenue+DESC&os=win&nopackages=1&json=1&cc=us',
+        );
+        const data = await response.json();
+        res.json({ status: 'success', items: data?.items ?? [] });
+    } catch (err) {
+        console.error('Error in /topsellers:', err);
+        res.status(500).json({ status: 'error', message: 'Failed to fetch top sellers' });
+    }
+});
+
+app.get('/toprated', async (_req, res) => {
+    try {
+        const response = await fetch(
+            'https://store.steampowered.com/search/results/?query&start=0&count=20&sort_by=Reviews_DESC&os=win&nopackages=1&json=1&cc=us',
+        );
+        const data = await response.json();
+        res.json({ status: 'success', items: data?.items ?? [] });
+    } catch (err) {
+        console.error('Error in /toprated:', err);
+        res.status(500).json({ status: 'error', message: 'Failed to fetch top rated' });
+    }
+});
+
+app.get('/newrelease', async (_req, res) => {
+    try {
+        const response = await fetch(
+            'https://store.steampowered.com/search/results/?query&start=0&count=20&sort_by=Released_DESC&os=win&nopackages=1&json=1&cc=us',
+        );
+        const data = await response.json();
+        res.json({ status: 'success', items: data?.items ?? [] });
+    } catch (err) {
+        console.error('Error in /newrelease:', err);
+        res.status(500).json({ status: 'error', message: 'Failed to fetch new releases' });
+    }
+});
+
+app.get('/upcoming', async (_req, res) => {
+    try {
+        const response = await fetch(
+            'https://store.steampowered.com/search/results/?query&start=0&count=20&sort_by=Coming_Soon&os=win&nopackages=1&json=1&cc=us',
+        );
+        const data = await response.json();
+        res.json({ status: 'success', items: data?.items ?? [] });
+    } catch (err) {
+        console.error('Error in /upcoming:', err);
+        res.status(500).json({ status: 'error', message: 'Failed to fetch upcoming games' });
+    }
+});
 app.post('/getGameDetails', async (req, res) => {
     const { appId } = req.body;
     if (!appId) return res.status(400).json({ status: 'error', message: 'appId is required' });
@@ -622,21 +859,29 @@ app.post('/getGameDetails', async (req, res) => {
         const response = await fetch(`https://store.steampowered.com/api/appdetails?appids=${appId}&cc=us`);
         const data     = await response.json();
 
-        const desc = getCleanDescription(data[appId]?.data.detailed_description);
-        const genres = data[appId]?.data.genres.map((g,i) =>{
-            return g.description;
-        });
-        const tags = await getSteamTags(appId);
+        const gameData = data[appId]?.data;
+        if (!gameData) {
+            return res.json({ status: 'success', gameDetails: null, tags: [], recommendations: { recommendations: [] } });
+        }
 
-        const recommendation_response = await fetch(`${PYTHON_SERVICE_URL}/recommend_by_description`, {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ description: desc, genres: genres, tags: tags }),
-        });
-        const recommendation_data = await recommendation_response.json();
+        const desc   = getCleanDescription(gameData.detailed_description || '');
+        const genres = (gameData.genres || []).map(g => g.description);
+        const tags   = await getSteamTags(appId);
+
+        let recommendation_data = { recommendations: [] };
+        try {
+            const recommendation_response = await fetch(`${PYTHON_SERVICE_URL}/recommend_by_description`, {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ description: desc, genres: genres, tags: tags }),
+            });
+            recommendation_data = await recommendation_response.json();
+        } catch (recErr) {
+            console.error('Recommendation service unavailable:', recErr.message);
+        }
+
         console.log(recommendation_data);
-
-        res.json({ status: 'success', gameDetails: data[appId]?.data ?? null, tags: tags ,recommendations: recommendation_data});
+        res.json({ status: 'success', gameDetails: gameData, tags: tags, recommendations: recommendation_data });
     } catch (err) {
         console.error('Error in /getGameDetails:', err);
         res.status(500).json({ status: 'error', message: 'Failed to fetch game details' });
@@ -750,6 +995,66 @@ app.post('/recommend', async (req, res) => {
         }
 
         res.status(500).json({ status: 'error', message: 'Failed to get recommendations', details: err.message });
+    }
+});
+
+// Submit a review
+app.post('/submitReview', requireAuth, async (req, res) => {
+    const { gameId, rating, body } = req.body;
+    const userId = req.user.userId;
+
+    if (!gameId || !rating || !body) {
+        return res.status(400).json({ success: false, error: 'Missing gameId, rating, or body' });
+    }
+
+    try {
+        const gameResult = await sql.query`
+            SELECT id FROM games WHERE steam_appid = ${gameId}
+        `;
+        const internalGameId = gameResult.recordset[0]?.id;
+        if (!internalGameId) {
+            return res.status(404).json({ success: false, error: 'Game not found in database' });
+        }
+
+        const existing = await sql.query`
+            SELECT id FROM reviews WHERE user_id = ${userId} AND game_id = ${internalGameId}
+        `;
+        if (existing.recordset.length > 0) {
+            return res.status(409).json({ success: false, error: 'You have already reviewed this game' });
+        }
+
+        await sql.query`
+            INSERT INTO reviews (user_id, game_id, rating, body)
+            VALUES (${userId}, ${internalGameId}, ${rating}, ${body})
+        `;
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Error in /submitReview:', err);
+        res.status(500).json({ success: false, error: 'Failed to save review' });
+    }
+});
+
+// Get local (DB) reviews for a game
+app.post('/getLocalReviews', async (req, res) => {
+    const { appId } = req.body;
+    if (!appId) return res.status(400).json({ success: false, error: 'Missing appId' });
+
+    try {
+        const result = await sql.query`
+            SELECT 
+                r.id, r.rating, r.body, r.likes, r.created_at,
+                u.username
+            FROM reviews r
+            INNER JOIN users u ON r.user_id = u.id
+            INNER JOIN games g ON r.game_id = g.id
+            WHERE g.steam_appid = ${appId}
+            ORDER BY r.created_at DESC
+        `;
+        res.json({ success: true, reviews: result.recordset });
+    } catch (err) {
+        console.error('Error in /getLocalReviews:', err);
+        res.status(500).json({ success: false, error: 'Failed to fetch local reviews' });
     }
 });
 
