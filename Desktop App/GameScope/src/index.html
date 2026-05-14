@@ -1,218 +1,501 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Game Scope</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=PT+Sans+Narrow:wght@400;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="index.css">
-</head>
-<body>
-
-<!-- ═══════════ SIDEBAR ═══════════ -->
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-content">
-    <div class="sidebar-header">
-      <div class="logo-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Scope</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=PT+Sans+Narrow:wght@400;700&family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <!-- ═══════════ SIDEBAR ═══════════ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-content">
+        <div class="sidebar-header">
+          <div class="logo-icon">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              stroke-width="2"
+            >
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+          </div>
+          <div class="logo-text">Game Scope</div>
+        </div>
+        <nav class="sidebar-nav">
+          <a class="nav-item active" data-page="home" href="#home">
+            <div class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path
+                  d="M2 7.5L10 2L18 7.5V17C18 17.55 17.55 18 17 18H13V12H7V18H3C2.45 18 2 17.55 2 17V7.5Z"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  fill="none"
+                />
+              </svg>
+            </div>
+            <span class="nav-text">Home</span>
+          </a>
+          <a class="nav-item" data-page="library" href="#library">
+            <div class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <rect
+                  x="3"
+                  y="3"
+                  width="7"
+                  height="7"
+                  rx="1"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+                <rect
+                  x="3"
+                  y="12"
+                  width="7"
+                  height="5"
+                  rx="1"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+                <rect
+                  x="12"
+                  y="3"
+                  width="5"
+                  height="7"
+                  rx="1"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+                <rect
+                  x="12"
+                  y="12"
+                  width="5"
+                  height="5"
+                  rx="1"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+              </svg>
+            </div>
+            <span class="nav-text">Library</span>
+          </a>
+          <a class="nav-item" data-page="wishlist" href="#wishlist">
+            <div class="nav-icon">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                />
+              </svg>
+            </div>
+            <span class="nav-text">Wishlist</span>
+          </a>
+          <a class="nav-item" data-page="profile" href="#profile">
+            <div class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <circle
+                  cx="12"
+                  cy="8"
+                  r="4"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M4 20c0-4 3.6-7 8-7s8 3 8 7"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <span class="nav-text">Profile</span>
+          </a>
+          <a class="nav-item" data-page="settings" href="#settings">
+            <div class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle
+                  cx="10"
+                  cy="10"
+                  r="8"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+                <circle
+                  cx="10"
+                  cy="10"
+                  r="3"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+              </svg>
+            </div>
+            <span class="nav-text">Settings</span>
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="copyright">© 2025 Game Scope</div>
+        </div>
       </div>
-      <div class="logo-text">Game Scope</div>
+    </aside>
+
+    <div class="login-overlay" id="loginOverlay">
+      <div class="login-card">
+        <div class="login-logo">
+          <div class="login-logo-icon">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              stroke-width="2.5"
+            >
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+          </div>
+          <span class="login-logo-text">Game Scope</span>
+        </div>
+
+        <!-- Step: Login + Signup (tabbed) -->
+        <div class="auth-step active" id="stepAuth">
+          <div class="auth-tabs">
+            <button class="auth-tab active" id="tabLoginBtn">Sign In</button>
+            <button class="auth-tab" id="tabSignupBtn">Create Account</button>
+          </div>
+
+          <div id="tabLogin">
+            <div class="auth-error" id="loginError"></div>
+            <div class="auth-field">
+              <label class="auth-label">Email</label>
+              <input
+                class="auth-input"
+                type="email"
+                id="loginEmail"
+                placeholder="you@example.com"
+                autocomplete="email"
+              />
+            </div>
+            <div class="auth-field">
+              <label class="auth-label">Password</label>
+              <input
+                class="auth-input"
+                type="password"
+                id="loginPassword"
+                placeholder="••••••••"
+              />
+            </div>
+            <button class="auth-btn auth-btn-primary" id="loginSubmitBtn">
+              Sign In
+            </button>
+            <div style="text-align: right; margin-top: 10px">
+              <a href="#" class="auth-forgot">Forgot password?</a>
+            </div>
+          </div>
+
+          <div id="tabSignup" style="display: none">
+            <div class="auth-error" id="signupError"></div>
+            <div class="auth-field">
+              <label class="auth-label">Username</label>
+              <input
+                class="auth-input"
+                type="text"
+                id="signupUsername"
+                placeholder="ShadowReaper47"
+              />
+            </div>
+            <div class="auth-field">
+              <label class="auth-label">Email</label>
+              <input
+                class="auth-input"
+                type="email"
+                id="signupEmail"
+                placeholder="you@example.com"
+              />
+            </div>
+            <div class="auth-field">
+              <label class="auth-label">Password</label>
+              <input
+                class="auth-input"
+                type="password"
+                id="signupPassword"
+                placeholder="min 6 characters"
+              />
+            </div>
+            <div class="auth-field">
+              <label class="auth-label">Confirm Password</label>
+              <input
+                class="auth-input"
+                type="password"
+                id="signupConfirmPassword"
+                placeholder="••••••••"
+              />
+            </div>
+            <button class="auth-btn auth-btn-primary" id="signupSubmitBtn">
+              Create Account
+            </button>
+          </div>
+        </div>
+
+        <!-- Step: 2FA QR setup -->
+        <div class="auth-step" id="stepQR">
+          <button class="auth-back" id="qrBackBtn">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M19 12H5M5 12l7-7M5 12l7 7" />
+            </svg>
+            Back
+          </button>
+          <h2 class="auth-title">Set up 2FA</h2>
+          <p class="auth-sub">Scan with Google Authenticator or Authy</p>
+          <div class="auth-qr-wrap">
+            <img id="qrImage" alt="QR Code" class="auth-qr-img" />
+            <p class="auth-qr-hint">
+              Scan this QR code, then enter<br />the 6-digit code below
+            </p>
+          </div>
+          <div class="auth-error" id="qrError"></div>
+          <div class="auth-field">
+            <label class="auth-label">Confirmation code</label>
+            <input
+              class="auth-input auth-code-input"
+              type="text"
+              id="qrCode"
+              placeholder="000000"
+              maxlength="6"
+              inputmode="numeric"
+            />
+          </div>
+          <button class="auth-btn auth-btn-primary" id="qrSubmit">
+            Verify &amp; Continue
+          </button>
+        </div>
+
+        <!-- Step: 2FA verify (returning user) -->
+        <div class="auth-step" id="step2FA">
+          <button class="auth-back" id="tfaBackBtn">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M19 12H5M5 12l7-7M5 12l7 7" />
+            </svg>
+            Back
+          </button>
+          <div class="auth-tfa-icon-wrap">
+            <div class="auth-tfa-icon">
+              <svg
+                width="26"
+                height="26"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#a78bfa"
+                stroke-width="1.5"
+              >
+                <rect x="5" y="11" width="14" height="10" rx="2" />
+                <path d="M8 11V7a4 4 0 018 0v4" />
+                <circle cx="12" cy="16" r="1" fill="#a78bfa" />
+              </svg>
+            </div>
+            <h2 class="auth-title">Two-Factor Auth</h2>
+            <p class="auth-sub">Enter the code from your authenticator app</p>
+          </div>
+          <div class="auth-error" id="tfaError"></div>
+          <div class="auth-field">
+            <label class="auth-label" style="text-align: center"
+              >6-digit code</label
+            >
+            <input
+              class="auth-input auth-code-input"
+              type="text"
+              id="tfaCode"
+              placeholder="000000"
+              maxlength="6"
+              inputmode="numeric"
+            />
+          </div>
+          <button class="auth-btn auth-btn-primary" id="tfaSubmit">
+            Verify
+          </button>
+          <button class="auth-btn auth-btn-ghost" id="tfaBackAlt">
+            Use a different account
+          </button>
+        </div>
+      </div>
     </div>
-    <nav class="sidebar-nav">
-      <a class="nav-item active" data-page="home" href="#home">
-        <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 7.5L10 2L18 7.5V17C18 17.55 17.55 18 17 18H13V12H7V18H3C2.45 18 2 17.55 2 17V7.5Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg></div>
-        <span class="nav-text">Home</span>
-      </a>
-      <a class="nav-item" data-page="library" href="#library">
-        <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="12" width="7" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="12" y="3" width="5" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="12" y="12" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/></svg></div>
-        <span class="nav-text">Library</span>
-      </a>
-      <a class="nav-item" data-page="wishlist" href="#wishlist">
-        <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
-        <span class="nav-text">Wishlist</span>
-      </a>
-      <a class="nav-item" data-page="profile" href="#profile">
-        <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-        <span class="nav-text">Profile</span>
-      </a>
-      <a class="nav-item" data-page="settings" href="#settings">
-        <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/></svg></div>
-        <span class="nav-text">Settings</span>
-      </a>
-    </nav>
-    <div class="sidebar-footer"><div class="copyright">© 2025 Game Scope</div></div>
-  </div>
-</aside>
 
-<div class="login-overlay" id="loginOverlay">
-  <div class="login-card">
-
-    <div class="login-logo">
-      <div class="login-logo-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
-          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-        </svg>
-      </div>
-      <span class="login-logo-text">Game Scope</span>
-    </div>
-
-    <!-- Step: Login + Signup (tabbed) -->
-    <div class="auth-step active" id="stepAuth">
-      <div class="auth-tabs">
-        <button class="auth-tab active" id="tabLoginBtn">Sign In</button>
-        <button class="auth-tab" id="tabSignupBtn">Create Account</button>
-      </div>
-
-      <div id="tabLogin">
-        <div class="auth-error" id="loginError"></div>
-        <div class="auth-field">
-          <label class="auth-label">Email</label>
-          <input class="auth-input" type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email"/>
-        </div>
-        <div class="auth-field">
-          <label class="auth-label">Password</label>
-          <input class="auth-input" type="password" id="loginPassword" placeholder="••••••••"/>
-        </div>
-        <button class="auth-btn auth-btn-primary" id="loginSubmitBtn">Sign In</button>
-        <div style="text-align:right;margin-top:10px">
-          <a href="#" class="auth-forgot">Forgot password?</a>
-        </div>
-      </div>
-
-      <div id="tabSignup" style="display:none">
-        <div class="auth-error" id="signupError"></div>
-        <div class="auth-field">
-          <label class="auth-label">Username</label>
-          <input class="auth-input" type="text" id="signupUsername" placeholder="ShadowReaper47"/>
-        </div>
-        <div class="auth-field">
-          <label class="auth-label">Email</label>
-          <input class="auth-input" type="email" id="signupEmail" placeholder="you@example.com"/>
-        </div>
-        <div class="auth-field">
-          <label class="auth-label">Password</label>
-          <input class="auth-input" type="password" id="signupPassword" placeholder="min 6 characters"/>
-        </div>
-        <div class="auth-field">
-          <label class="auth-label">Confirm Password</label>
-          <input class="auth-input" type="password" id="signupConfirmPassword" placeholder="••••••••"/>
-        </div>
-        <button class="auth-btn auth-btn-primary" id="signupSubmitBtn">Create Account</button>
-      </div>
-    </div>
-
-    <!-- Step: 2FA QR setup -->
-    <div class="auth-step" id="stepQR">
-      <button class="auth-back" id="qrBackBtn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M19 12H5M5 12l7-7M5 12l7 7"/>
-        </svg>
-        Back
-      </button>
-      <h2 class="auth-title">Set up 2FA</h2>
-      <p class="auth-sub">Scan with Google Authenticator or Authy</p>
-      <div class="auth-qr-wrap">
-        <img id="qrImage" alt="QR Code" class="auth-qr-img"/>
-        <p class="auth-qr-hint">Scan this QR code, then enter<br/>the 6-digit code below</p>
-      </div>
-      <div class="auth-error" id="qrError"></div>
-      <div class="auth-field">
-        <label class="auth-label">Confirmation code</label>
-        <input class="auth-input auth-code-input" type="text" id="qrCode" placeholder="000000" maxlength="6" inputmode="numeric"/>
-      </div>
-      <button class="auth-btn auth-btn-primary" id="qrSubmit">Verify &amp; Continue</button>
-    </div>
-
-    <!-- Step: 2FA verify (returning user) -->
-    <div class="auth-step" id="step2FA">
-      <button class="auth-back" id="tfaBackBtn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M19 12H5M5 12l7-7M5 12l7 7"/>
-        </svg>
-        Back
-      </button>
-      <div class="auth-tfa-icon-wrap">
-        <div class="auth-tfa-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5">
-            <rect x="5" y="11" width="14" height="10" rx="2"/>
-            <path d="M8 11V7a4 4 0 018 0v4"/>
-            <circle cx="12" cy="16" r="1" fill="#a78bfa"/>
+    <!-- ═══════════ MAIN ═══════════ -->
+    <div class="main-content" id="mainContent">
+      <!-- Shared Header -->
+      <div class="header-container">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path
+              d="M3 5h14M3 10h14M3 15h14"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
           </svg>
+        </button>
+        <div class="search-bar">
+          <div class="input-container">
+            <div class="search-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle
+                  cx="7"
+                  cy="7"
+                  r="5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M11 11l3 3"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <input
+              type="text"
+              class="search-input"
+              id="globalSearch"
+              placeholder="Search by name ..."
+            />
+          </div>
+
+          <div class="search-results" id="searchResults"></div>
         </div>
-        <h2 class="auth-title">Two-Factor Auth</h2>
-        <p class="auth-sub">Enter the code from your authenticator app</p>
-      </div>
-      <div class="auth-error" id="tfaError"></div>
-      <div class="auth-field">
-        <label class="auth-label" style="text-align:center">6-digit code</label>
-        <input class="auth-input auth-code-input" type="text" id="tfaCode" placeholder="000000" maxlength="6" inputmode="numeric"/>
-      </div>
-      <button class="auth-btn auth-btn-primary" id="tfaSubmit">Verify</button>
-      <button class="auth-btn auth-btn-ghost" id="tfaBackAlt">Use a different account</button>
-    </div>
-
-  </div>
-</div>
-
-<!-- ═══════════ MAIN ═══════════ -->
-<div class="main-content" id="mainContent">
-
-  <!-- Shared Header -->
-  <div class="header-container">
-    <button class="mobile-menu-btn" id="mobileMenuBtn">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-    </button>
-    <div class="search-bar">
-      <div class="input-container">
-        <div class="search-icon">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <div class="header-controls">
+          <div class="icon-button notifications">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path
+                d="M10 2a5 5 0 015 5v3l1.5 2.5H3.5L5 10V7a5 5 0 015-5z"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+              <path
+                d="M8 17a2 2 0 004 0"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+            </svg>
+            <div class="notification-dot"></div>
+          </div>
+          <div class="icon-button" id="themeToggleBtn">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <circle
+                cx="10"
+                cy="10"
+                r="4"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+              <path
+                d="M10 2v2M10 16v2M2 10h2M16 10h2M4.22 4.22l1.42 1.42M14.36 14.36l1.42 1.42M4.22 15.78l1.42-1.42M14.36 5.64l1.42-1.42"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
+          </div>
+          <a class="user-avatar" data-page="profile" href="#profile">
+            <img
+              src="Uploads/userphoto.jpg"
+              alt="User"
+              onerror="
+                this.src = 'https://placehold.co/48x48/532494/ffffff?text=U'
+              "
+            />
+          </a>
         </div>
-        <input type="text" class="search-input" id="globalSearch" placeholder="Search by name ..." />
       </div>
 
-      <div class="search-results" id="searchResults">
-      </div>
-    </div>
-    <div class="header-controls">
-      <div class="icon-button notifications">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2a5 5 0 015 5v3l1.5 2.5H3.5L5 10V7a5 5 0 015-5z" stroke="currentColor" stroke-width="1.5"/><path d="M8 17a2 2 0 004 0" stroke="currentColor" stroke-width="1.5"/></svg>
-        <div class="notification-dot"></div>
-      </div>
-      <div class="icon-button" id="themeToggleBtn">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.22 4.22l1.42 1.42M14.36 14.36l1.42 1.42M4.22 15.78l1.42-1.42M14.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </div>
-      <a class="user-avatar" data-page="profile" href="#profile">
-        <img src="Uploads/userphoto.jpg" alt="User" onerror="this.src='https://placehold.co/48x48/532494/ffffff?text=U'"/>
-      </a>
-    </div>
-  </div>
-
-  <!-- ══ HOME PAGE ══ -->
-  <div class="page-view active" id="page-home">
-    <div class="hero-section" id="heroSection">
-      <div class="loading-screen"><div class="loading-spinner"></div><div class="loading-text">Loading trending games...</div></div>
-    </div>
-
-    
-    <div class="for-you-section">
-      <div class="section-head"><div class="section-title">For You</div></div>
-      <div class="carousel-wrap">
-        <button class="c-arrow left" id="foryouLeft"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
-        <div class="trending-grid" id="forYouGrid" style="grid-auto-columns: calc(33.333% - 10.66px);display: grid;">
-          <div class="loading-screen" style="grid-column:1/-1"><div class="loading-spinner"></div></div>
+      <!-- ══ HOME PAGE ══ -->
+      <div class="page-view active" id="page-home">
+        <div class="hero-section" id="heroSection">
+          <div class="loading-screen">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading trending games...</div>
+          </div>
         </div>
-        <button class="c-arrow right" id="foryouRight"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
-      </div>
-    </div>
 
-    <div class="trending-rem-section">
-      <div class="section-head"><div class="section-title">On Trending</div></div>
-      <div class="trending-grid" id="trendingGrid">
-        <div class="loading-screen" style="grid-column:1/-1"><div class="loading-spinner"></div></div>
-      </div>
-    </div>
+        <div class="for-you-section">
+          <div class="section-head">
+            <div class="section-title">For You</div>
+          </div>
+          <div class="carousel-wrap">
+            <button class="c-arrow left" id="foryouLeft">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <div
+              class="trending-grid"
+              id="forYouGrid"
+              style="grid-auto-columns: calc(33.333% - 10.66px); display: grid"
+            >
+              <div class="loading-screen" style="grid-column: 1/-1">
+                <div class="loading-spinner"></div>
+              </div>
+            </div>
+            <button class="c-arrow right" id="foryouRight">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+          </div>
+        </div>
 
-    <!-- <div class="categories-section">
+        <div class="trending-rem-section">
+          <div class="section-head">
+            <div class="section-title">On Trending</div>
+          </div>
+          <div class="trending-grid" id="trendingGrid">
+            <div class="loading-screen" style="grid-column: 1/-1">
+              <div class="loading-spinner"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="categories-section">
       <div class="section-head"><div class="section-title">Browse by Category</div></div>
       <div class="categories-scroll">
         <div class="category-card">Classic</div><div class="category-card">Strategy</div>
@@ -223,411 +506,855 @@
       </div>
     </div> -->
 
-    <div class="filter-row">
-      <div class="filter-tabs" id="filterTabs" style="justify-content: center;">
-        <button class="filter-tab active" data-tab="onsale">On Sale</button>
-        <button class="filter-tab" data-tab="freebies">Freebies</button>
-        <button class="filter-tab" data-tab="topsellers">Top Sellers</button>
-        <button class="filter-tab" data-tab="toprated">Top Rated</button>
-        <button class="filter-tab" data-tab="newrelease">New Release</button>
-      </div>
-    </div>
+        <div class="filter-row">
+          <div
+            class="filter-tabs"
+            id="filterTabs"
+            style="justify-content: center"
+          >
+            <button class="filter-tab active" data-tab="onsale">On Sale</button>
+            <button class="filter-tab" data-tab="freebies">Freebies</button>
+            <button class="filter-tab" data-tab="topsellers">
+              Top Sellers
+            </button>
+            <button class="filter-tab" data-tab="toprated">Top Rated</button>
+            <button class="filter-tab" data-tab="newrelease">
+              New Release
+            </button>
+          </div>
+        </div>
 
-    <div class="games-section">
-      <div class="carousel-wrap">
-        <button class="c-arrow left" id="gamesLeft"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
-        <div class="games-grid" id="gamesGrid"></div>
-        <button class="c-arrow right" id="gamesRight"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+        <div class="games-section">
+          <div class="carousel-wrap">
+            <button class="c-arrow left" id="gamesLeft">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <div class="games-grid" id="gamesGrid"></div>
+            <button class="c-arrow right" id="gamesRight">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
 
-  </div>
-
-  <!-- ══ LIBRARY PAGE ══ -->
-  <div class="page-view" id="page-library">
-    <div class="lib-controls">
-      <div class="platform-tabs" id="platformTabs">
-        <button class="tab-btn active" data-platform="All Games">All Games <span class="count" id="allCount">26</span></button>
-        <button class="tab-btn" data-platform="Steam">Steam <span class="count">11</span></button>
-        <button class="tab-btn" data-platform="Epic">Epic <span class="count">2</span></button>
+      <!-- ══ LIBRARY PAGE ══ -->
+      <div class="page-view" id="page-library">
+        <div class="lib-controls">
+          <div class="platform-tabs" id="platformTabs">
+            <button class="tab-btn active" data-platform="All Games">
+              All Games <span class="count" id="allCount">26</span>
+            </button>
+            <button class="tab-btn" data-platform="Steam">
+              Steam <span class="count">11</span>
+            </button>
+            <button class="tab-btn" data-platform="Epic">
+              Epic <span class="count">2</span>
+            </button>
+          </div>
+          <div class="add-to-lib">
+            <button
+              class="add-btn add-menu-toggle"
+              id="addMenuBtn"
+              aria-expanded="false"
+              aria-label="Add or link accounts"
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path
+                  d="M10 2v16M2 10h16"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+            <div class="add-menu" id="addMenu">
+              <button class="add-btn add-menu-item" id="addLocalBtn">
+                Add local game
+              </button>
+              <button class="add-btn add-menu-item" id="linkAccountsBtn">
+                Link accounts
+              </button>
+            </div>
+          </div>
+          <div class="view-toggle">
+            <button class="view-btn active" id="gridViewBtn">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <rect
+                  x="2"
+                  y="2"
+                  width="7"
+                  height="7"
+                  rx="1"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+                <rect
+                  x="11"
+                  y="2"
+                  width="7"
+                  height="7"
+                  rx="1"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+                <rect
+                  x="2"
+                  y="11"
+                  width="7"
+                  height="7"
+                  rx="1"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+                <rect
+                  x="11"
+                  y="11"
+                  width="7"
+                  height="7"
+                  rx="1"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+              </svg>
+            </button>
+            <button class="view-btn" id="listViewBtn">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path
+                  d="M3 5h14M3 10h14M3 15h14"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="lib-grid" id="libContainer"></div>
       </div>
-      <div class="add-to-lib">
-        <button class="add-btn add-menu-toggle" id="addMenuBtn" aria-expanded="false" aria-label="Add or link accounts">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2v16M2 10h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </button>
-        <div class="add-menu" id="addMenu">
-          <button class="add-btn add-menu-item" id="addLocalBtn">
-            Add local game
+
+      <!-- ══ WISHLIST PAGE ══ -->
+      <div class="page-view" id="page-wishlist">
+        <div class="page-title-row">
+          <div>
+            <h1 class="page-title">My Wishlist</h1>
+            <p class="page-subtitle">Games you're tracking.</p>
+          </div>
+          <button class="refresh-btn" id="activityToggle">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <path
+                d="M20 11A9 9 0 1111 2"
+                stroke="white"
+                stroke-width="2.2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M11 2l3 3-3 3"
+                stroke="white"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </button>
-          <button class="add-btn add-menu-item" id="linkAccountsBtn">
-            Link accounts
-          </button>
         </div>
-      </div>
-      <div class="view-toggle">
-        <button class="view-btn active" id="gridViewBtn">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="2" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="11" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="11" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
-        </button>
-        <button class="view-btn" id="listViewBtn">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </button>
-      </div>
-    </div>
-    <div class="lib-grid" id="libContainer"></div>
-  </div>
-
-  <!-- ══ WISHLIST PAGE ══ -->
-  <div class="page-view" id="page-wishlist">
-    <div class="page-title-row">
-      <div>
-        <h1 class="page-title">My Wishlist</h1>
-        <p class="page-subtitle">Games you're tracking.</p>
-      </div>
-      <button class="refresh-btn" id="activityToggle">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M20 11A9 9 0 1111 2" stroke="white" stroke-width="2.2" stroke-linecap="round"/><path d="M11 2l3 3-3 3" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-    </div>
-    <div class="alert-banner">
-      <div class="alert-left">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M10 2a6 6 0 016 6v3.5l1.5 2.5H2.5L4 11.5V8a6 6 0 016-6z" stroke="#E1E1EA" stroke-width="1.5"/><path d="M8 17a2 2 0 004 0" stroke="#E1E1EA" stroke-width="1.5"/></svg>
-        <span class="alert-text">🎉 7 of your wishlist games have updates or are currently on sale!</span>
-      </div>
-      <span class="alert-dot"></span>
-    </div>
-    <div class="controls-row">
-      <div class="games-count"><span class="count-num">12</span><span class="count-label"> games tracked</span></div>
-      <div class="dropdowns">
-        <div class="dropdown"><div class="dropdown-trigger" id="sortTrigger"><span id="sortLabel">Sort: Recently Added</span><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="#E1E1EA" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg></div>
-          <div class="dropdown-menu" id="sortMenu"><div class="dd-item active" data-val="Recently Added">Recently Added</div><div class="dd-item" data-val="Alphabetical">Alphabetical</div></div>
+        <div class="alert-banner">
+          <div class="alert-left">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M10 2a6 6 0 016 6v3.5l1.5 2.5H2.5L4 11.5V8a6 6 0 016-6z"
+                stroke="#E1E1EA"
+                stroke-width="1.5"
+              />
+              <path d="M8 17a2 2 0 004 0" stroke="#E1E1EA" stroke-width="1.5" />
+            </svg>
+            <span class="alert-text"
+              >🎉 7 of your wishlist games have updates or are currently on
+              sale!</span
+            >
+          </div>
+          <span class="alert-dot"></span>
         </div>
-        <div class="dropdown"><div class="dropdown-trigger" id="filterTriggerWish"><span id="filterLabelWish">Filter: All Games</span><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="#E1E1EA" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg></div>
-          <div class="dropdown-menu" id="filterMenuWish"><div class="dd-item active" data-val="All Games">All Games</div><div class="dd-item" data-val="On Sale">On Sale</div><div class="dd-item" data-val="Free">Free</div></div>
-        </div>
-      </div>
-    </div>
-    <div class="level-card">
-      <div class="level-left">
-        <div class="level-badge"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2l2.09 4.26L17 7.27l-3.5 3.41.83 4.82L10 13.25l-4.33 2.25.83-4.82L3 7.27l4.91-.73L10 2z" stroke="#FDC700" stroke-width="1.5"/></svg></div>
-        <div><span class="level-name">Explorer</span><span class="level-sublabel">Wishlist Level</span></div>
-      </div>
-      <div class="level-right"><span class="level-num">12</span><span class="level-of">/ 15 games</span></div>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
-      <p class="progress-label">3 more games to reach Collector</p>
-    </div>
-    <div class="wish-grid" id="wishGrid"></div>
-  </div>
-
-  <!-- ══ PROFILE PAGE ══ -->
-  <div class="page-view" id="page-profile">
-    <section class="profile-hero">
-      <div class="hero-left">
-        <div class="avatar-wrap">
-          <div class="avatar-glow"></div>
-          <img src="Uploads/userphoto.jpg" alt="User" class="profile-avatar" onerror="this.src='https://placehold.co/117x117/532494/ffffff?text=SR'"/>
-        </div>
-        <div class="profile-info">
-          <h1 class="profile-username">ShadowReaper47</h1>
-          <p class="profile-bio">Competitive gamer and achievement hunter. Always looking for the next challenge.</p>
-          <a href="#" class="steam-link">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="16" rx="2" fill="#E1E1EA" opacity="0.8"/></svg>
-            View Steam Profile
-          </a>
-        </div>
-      </div>
-      <div class="hero-right">
-        <button class="edit-profile-btn">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M14.5 2.5l3 3L6 17H3v-3L14.5 2.5z" stroke="#E1E1EA" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Edit Profile
-        </button>
-      </div>
-    </section>
-    <section class="stats-section">
-      <h2 class="stats-section-title">Gaming Statistics</h2>
-      <div class="stats-row stats-row-3">
-        <div class="stat-card"><div class="stat-val">247</div><div class="stat-lbl">Total Games Owned</div></div>
-        <div class="stat-card"><div class="stat-val">Action RPG</div><div class="stat-lbl">Favorite Genre</div></div>
-        <div class="stat-card"><div class="stat-val">1,847</div><div class="stat-lbl">Total Hours Played</div></div>
-      </div>
-      <div class="stats-row stats-row-2">
-        <div class="stat-card"><div class="stat-val stat-val--sm">Cyberpunk 2077</div><div class="stat-lbl">Most Played Game</div></div>
-        <div class="stat-card"><div class="stat-val stat-val--sm">42h</div><div class="stat-lbl">Recent Grind (Last 2 Weeks)</div></div>
-      </div>
-    </section>
-    <div class="profile-tabs">
-      <button class="profile-tab-btn active" data-tab="activity">Activity</button>
-      <button class="profile-tab-btn" data-tab="reviews">Reviews</button>
-      <button class="profile-tab-btn" data-tab="favourite">Favourite</button>
-    </div>
-    <div class="tab-content active" id="tab-activity">
-      <div class="section-block">
-        <div class="reviews-header"><h3 class="section-block-title">Recent Reviews</h3><span class="reviews-count">5 Reviews</span></div>
-        <div class="reviews-list" id="activityReviews"></div>
-      </div>
-      <div class="section-block">
-        <h3 class="section-block-title">Recently Added to Library</h3>
-        <div class="library-grid" id="recentlyAdded"></div>
-      </div>
-    </div>
-    <div class="tab-content" id="tab-reviews">
-      <div class="reviews-header"><h3 class="section-block-title">All Reviews</h3><span class="reviews-count">5 Reviews</span></div>
-      <div class="reviews-list" id="reviewsTabList"></div>
-    </div>
-    <div class="tab-content" id="tab-favourite">
-      <h3 class="section-block-title">Favourite Games</h3>
-      <div class="library-grid" id="favouriteGrid"></div>
-    </div>
-    <div class="user-control" id="userControl">
-      <button class="tab-btn" id="logout">Log Out</button>
-    </div>
-  </div>
-
-  <!-- ══ GAME DETAILS PAGE ══ -->
-  <div class="page-view" id="page-gamedetails">
-    <div id="gameDetailsContent">
-      <div class="loading-screen"><div class="loading-spinner"></div><div class="loading-text">Loading game details...</div></div>
-    </div>
-  </div>
-
-<!-- ══ SETTINGS PAGE ══ -->
-  <div id="page-settings" class="page-view">
-  <div class="settings-layout">
-    
-    <aside class="settings-inner-nav">
-      <h2 class="settings-page-header">Settings</h2>
-      <nav class="jump-links">
-        <div class="jump-link active" data-target="general-sec">General</div>
-        <div class="jump-link" data-target="library-sec">Library & Sync</div>
-        <div class="jump-link" data-target="security-sec">Security</div>
-        <div class="jump-link" data-target="support-sec">Support</div>
-      </nav>
-    </aside>
-
-    <div class="settings-scroll-area" id="settingsScrollArea">
-      
-      <section id="general-sec" class="settings-block">
-        <h3 class="block-title">General</h3>
-        <div class="settings-card">
-          <div class="setting-item">
-            <div class="setting-info">
-              <label>Light Mode</label>
-              <p>Enable light theme for better daytime browsing.</p>
-            </div>
-            <input type="checkbox" class="tgl-btn" id="darkModeToggle">
+        <div class="controls-row">
+          <div class="games-count">
+            <span class="count-num">12</span
+            ><span class="count-label"> games tracked</span>
           </div>
-        </div>
-      </section>
-
-      <section id="library-sec" class="settings-block">
-        <h3 class="block-title">Library & Sync</h3>
-        <div class="settings-card">
-          <div class="setting-item">
-            <div class="setting-info">
-              <label>Auto-Sync Steam</label>
-              <p>Automatically update your Steam library on startup.</p>
-            </div>
-            <input type="checkbox" class="tgl-btn" checked>
-          </div>
-          <div class="setting-item">
-            <div class="setting-info">
-              <label>Aggregated Metadata</label>
-              <p>Fetch combined data from IGDB and Steam APIs.</p>
-            </div>
-            <input type="checkbox" class="tgl-btn" checked>
-          </div>
-          <div class="setting-item">
-            <div class="setting-info">
-              <label>Steam Accounts</label>
-              <p>Add and manage multiple Steam accounts here.</p>
-            </div>
-            <button class="settings-link-btn" id="settingsAddSteamBtn">Add Steam Account</button>
-          </div>
-          <div id="steamAccountsList" class="account-list">
-            <div class="account-placeholder">No Steam accounts linked yet.</div>
-          </div>
-          <div class="setting-item">
-            <div class="setting-info">
-              <label>Epic Account</label>
-              <p>Link your Epic Games account for game sync.</p>
-            </div>
-            <button class="settings-link-btn" id="settingsLinkEpicBtn">Link Epic Account</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ══ SECURITY SECTION ══ -->
-      <section id="security-sec" class="settings-block">
-        <h3 class="block-title">Security</h3>
-        <div class="settings-card">
-          <div class="setting-item">
-            <div class="setting-info">
-              <label>Two-Factor Authentication</label>
-              <p id="twoFaStatusText">Adds an extra layer of security to your account.</p>
-            </div>
-            <button class="settings-link-btn" id="twoFaToggleBtn">Enable 2FA</button>
-          </div>
-
-          <!-- Inline QR panel (hidden by default) -->
-          <div id="settings2faPanel" style="display:none; padding: 16px 0 4px;">
-            <div id="settings2faSetup">
-              <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Scan this QR code with Google Authenticator or Authy, then enter the 6-digit code to confirm.</p>
-              <div style="display:flex;justify-content:center;margin-bottom:14px;">
-                <img id="settings2faQR" alt="2FA QR Code" style="width:160px;height:160px;border-radius:8px;border:2px solid var(--border-color,#2a2a3a);"/>
+          <div class="dropdowns">
+            <div class="dropdown">
+              <div class="dropdown-trigger" id="sortTrigger">
+                <span id="sortLabel">Sort: Recently Added</span
+                ><svg width="16" height="16" viewBox="0 0 16 16">
+                  <path
+                    d="M4 6l4 4 4-4"
+                    stroke="#E1E1EA"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    fill="none"
+                  />
+                </svg>
               </div>
-              <div class="auth-error" id="settings2faError" style="margin-bottom:8px;"></div>
-              <div style="display:flex;gap:8px;align-items:center;">
-                <input class="auth-input auth-code-input" type="text" id="settings2faCode" placeholder="000000" maxlength="6" inputmode="numeric" style="flex:1;"/>
-                <button class="settings-link-btn" id="settings2faVerifyBtn">Verify</button>
-                <button class="settings-link-btn" id="settings2faCancelBtn" style="background:transparent;border:1px solid var(--border-color,#2a2a3a);color:var(--text-muted);">Cancel</button>
+              <div class="dropdown-menu" id="sortMenu">
+                <div class="dd-item active" data-val="Recently Added">
+                  Recently Added
+                </div>
+                <div class="dd-item" data-val="Alphabetical">Alphabetical</div>
+              </div>
+            </div>
+            <div class="dropdown">
+              <div class="dropdown-trigger" id="filterTriggerWish">
+                <span id="filterLabelWish">Filter: All Games</span
+                ><svg width="16" height="16" viewBox="0 0 16 16">
+                  <path
+                    d="M4 6l4 4 4-4"
+                    stroke="#E1E1EA"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    fill="none"
+                  />
+                </svg>
+              </div>
+              <div class="dropdown-menu" id="filterMenuWish">
+                <div class="dd-item active" data-val="All Games">All Games</div>
+                <div class="dd-item" data-val="On Sale">On Sale</div>
+                <div class="dd-item" data-val="Free">Free</div>
               </div>
             </div>
           </div>
         </div>
-      </section>
-
-      <section id="support-sec" class="settings-block">
-        <h3 class="block-title">Support</h3>
-        <div class="settings-card links-list">
-          <a href="#" class="list-item">
-            <span>Privacy Policy</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </a>
-          <a href="#" class="list-item">
-            <span>Terms of Service</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </a>
-          <div class="list-item no-hover">
-            <span>App Version</span>
-            <span class="v-tag">1.0.4-beta</span>
-          </div>
-        </div>
-      </section>
-
-    </div>
-  </div>
-</div>  
-
-  <!-- ══ REVIEWS PAGE ══ -->
-  <div class="page-view" id="page-reviews">
-    <div class="back-button" onclick="navigate('gamedetails', {appid: currentGameId})">
-      <div class="back-arrow">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <span>Back to Game</span>
-    </div>
-
-    <div class="rating-card">
-      <div class="rating-score" id="ratingScore">—</div>
-      <div class="stars" id="overallStars"></div>
-      <div class="review-count" id="reviewCountSummary">Loading…</div>
-    </div>
-
-    <div class="content-wrapper">
-      <div class="game-sidebar">
-        <img id="revGameCoverImg" src="" alt="Game Cover" class="game-cover" onerror="this.src='https://placehold.co/396x541/1A1A24/E1E1EA?text=Game'">
-        <div class="game-info">
-          <h2 class="game-title" id="revGameTitleText">Loading…</h2>
-          <div class="game-stats">
-            <div class="stat"><div class="stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 15C15.31 15 18 12.31 18 9C18 5.69 15.31 3 12 3C8.69 3 6 5.69 6 9C6 12.31 8.69 15 12 15Z" stroke="currentColor" stroke-width="1.5"/><path d="M3 21C3 17.13 6.13 14 10 14H14C17.87 14 21 17.13 21 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><span id="revStatPlayers">—</span></div>
-            <div class="stat"><div class="stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.04L12 21.35Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></div><span id="revStatWishlisted">—</span></div>
-            <div class="stat"><div class="stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M21 15C21 15.53 20.79 16.04 20.41 16.41C20.04 16.79 19.53 17 19 17H7L3 21V5C3 4.47 3.21 3.96 3.59 3.59C3.96 3.21 4.47 3 5 3H19C19.53 3 20.04 3.21 20.41 3.59C20.79 3.96 21 4.47 21 5V15Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span id="revStatReviews">—</span></div>
-          </div>
-        </div>
-        <button class="write-review-btn" id="writeReviewBtn">
-          <div class="review-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 2L3 12L2 14L4 13L14 3L13 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <span>Write a Review</span>
-        </button>
-      </div>
-
-      <div class="reviews-section">
-        <div class="filter-tabs" id="revFilterTabs">
-          <div class="tab active" data-filter="all">Most Recent</div>
-          <div class="tab" data-filter="helpful">Most Helpful</div>
-          <div class="tab" data-filter="positive">Positive</div>
-          <div class="tab" data-filter="negative">Negative</div>
-          <div class="tab dropdown-tab" data-filter="rating">
-            <span>Filter by Rating</span>
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-        </div>
-        <div class="reviews-header"><h3>All Reviews (<span id="reviewCount">0</span>)</h3></div>
-        <div class="reviews-list" id="reviewsList"></div>
-        <div class="pagination">
-          <button class="page-btn" id="prevPageBtn">Prev</button>
-          <div class="page-numbers" id="pageNumbers"></div>
-          <button class="page-btn" id="nextPageBtn">Next</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="review-form-container" id="reviewFormContainer">
-      <div class="form-tabs">
-        <div class="tabs-left">
-          <div class="form-tab active" data-form-tab="review">Review</div>
-        </div>
-        <div class="log-counter">CURRENT LOG 0</div>
-      </div>
-      <div class="form-content">
-        <h2 class="form-title">Write Your Own Review</h2>
-        <div class="form-row">
-          <div class="rating-section">
-            <label class="section-label">Rating</label>
-            <div class="rating-stars" id="ratingStars"></div>
-          </div>
-          <div class="platform-section">
-            <label class="platform-label">Platform</label>
-            <div class="platform-select" id="platformSelect">
-              <span id="platformLabel">Select Release Platform..</span>
-              <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1L6 7L11 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <div class="level-card">
+          <div class="level-left">
+            <div class="level-badge">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path
+                  d="M10 2l2.09 4.26L17 7.27l-3.5 3.41.83 4.82L10 13.25l-4.33 2.25.83-4.82L3 7.27l4.91-.73L10 2z"
+                  stroke="#FDC700"
+                  stroke-width="1.5"
+                />
+              </svg>
             </div>
-            <div class="platform-dropdown" id="platformDropdown">
-              <div class="platform-option" data-value="PC">PC</div>
+            <div>
+              <span class="level-name">Explorer</span
+              ><span class="level-sublabel">Wishlist Level</span>
             </div>
           </div>
-        </div>
-        <div class="review-text-section">
-          <div class="section-header">
-            <label class="section-label">Review</label>
-            <span class="formatting-text">Formatting</span>
+          <div class="level-right">
+            <span class="level-num">12</span
+            ><span class="level-of">/ 15 games</span>
           </div>
-          <textarea class="text-area" id="reviewText" placeholder="What'd you think..."></textarea>
-          <div class="text-counter"><span class="char-count" id="charCount">0 characters</span><span class="min-chars">Minimum 10 characters</span></div>
         </div>
-        <div class="form-options">
-          <div class="option" id="spoilersOption"><div class="checkbox" id="spoilersCheckbox"></div><span>Contains spoilers</span></div>
-          <div class="option" id="recommendOption"><div class="checkbox checked" id="recommendCheckbox"></div><span>I recommend this game</span></div>
+        <div class="progress-wrap">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 80%"></div>
+          </div>
+          <p class="progress-label">3 more games to reach Collector</p>
+        </div>
+        <div class="wish-grid" id="wishGrid"></div>
+      </div>
+
+      <!-- ══ PROFILE PAGE ══ -->
+      <div class="page-view" id="page-profile">
+        <section class="profile-hero">
+          <div class="hero-left">
+            <div class="avatar-wrap">
+              <div class="avatar-glow"></div>
+              <img
+                src="Uploads/userphoto.jpg"
+                alt="User"
+                class="profile-avatar"
+                onerror="
+                  this.src =
+                    'https://placehold.co/117x117/532494/ffffff?text=SR'
+                "
+              />
+            </div>
+            <div class="profile-info">
+              <h1 class="profile-username">ShadowReaper47</h1>
+              <p class="profile-bio">
+                Competitive gamer and achievement hunter. Always looking for the
+                next challenge.
+              </p>
+              <a href="#" class="steam-link">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <rect
+                    x="2"
+                    y="2"
+                    width="16"
+                    height="16"
+                    rx="2"
+                    fill="#E1E1EA"
+                    opacity="0.8"
+                  />
+                </svg>
+                View Steam Profile
+              </a>
+            </div>
+          </div>
+          <div class="hero-right">
+            <button class="edit-profile-btn">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path
+                  d="M14.5 2.5l3 3L6 17H3v-3L14.5 2.5z"
+                  stroke="#E1E1EA"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+              Edit Profile
+            </button>
+          </div>
+        </section>
+        <section class="stats-section">
+          <h2 class="stats-section-title">Gaming Statistics</h2>
+          <div class="stats-row stats-row-3">
+            <div class="stat-card">
+              <div class="stat-val">247</div>
+              <div class="stat-lbl">Total Games Owned</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val">Action RPG</div>
+              <div class="stat-lbl">Favorite Genre</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val">1,847</div>
+              <div class="stat-lbl">Total Hours Played</div>
+            </div>
+          </div>
+          <div class="stats-row stats-row-2">
+            <div class="stat-card">
+              <div class="stat-val stat-val--sm">Cyberpunk 2077</div>
+              <div class="stat-lbl">Most Played Game</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val stat-val--sm">42h</div>
+              <div class="stat-lbl">Recent Grind (Last 2 Weeks)</div>
+            </div>
+          </div>
+        </section>
+        <div class="profile-tabs">
+          <button class="profile-tab-btn active" data-tab="activity">
+            Activity
+          </button>
+          <button class="profile-tab-btn" data-tab="reviews">Reviews</button>
+          <button class="profile-tab-btn" data-tab="favourite">
+            Favourite
+          </button>
+        </div>
+        <div class="tab-content active" id="tab-activity">
+          <div class="section-block">
+            <div class="reviews-header">
+              <h3 class="section-block-title">Recent Reviews</h3>
+              <span class="reviews-count">5 Reviews</span>
+            </div>
+            <div class="reviews-list" id="activityReviews"></div>
+          </div>
+          <div class="section-block">
+            <h3 class="section-block-title">Recently Added to Library</h3>
+            <div class="library-grid" id="recentlyAdded"></div>
+          </div>
+        </div>
+        <div class="tab-content" id="tab-reviews">
+          <div class="reviews-header">
+            <h3 class="section-block-title">All Reviews</h3>
+            <span class="reviews-count">5 Reviews</span>
+          </div>
+          <div class="reviews-list" id="reviewsTabList"></div>
+        </div>
+        <div class="tab-content" id="tab-favourite">
+          <h3 class="section-block-title">Favourite Games</h3>
+          <div class="library-grid" id="favouriteGrid"></div>
+        </div>
+        <div class="user-control" id="userControl">
+          <button class="tab-btn" id="logout">Log Out</button>
         </div>
       </div>
-      <div class="form-footer">
-        <div class="full-editor">
-          <div class="editor-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg></div>
-          <span>Use Full Editor</span>
+
+      <!-- ══ GAME DETAILS PAGE ══ -->
+      <div class="page-view" id="page-gamedetails">
+        <div id="gameDetailsContent">
+          <div class="loading-screen">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading game details...</div>
+          </div>
         </div>
-        <div class="form-buttons">
-          <button class="cancel-btn" id="cancelBtn">Cancel</button>
-          <button class="submit-btn" id="submitBtn" disabled>Submit Review</button>
+      </div>
+
+      <!-- ══ SETTINGS PAGE ══ -->
+      <div id="page-settings" class="page-view">
+        <div class="settings-layout">
+          <aside class="settings-inner-nav">
+            <h2 class="settings-page-header">Settings</h2>
+            <nav class="jump-links">
+              <div class="jump-link active" data-target="general-sec">
+                General
+              </div>
+              <div class="jump-link" data-target="library-sec">
+                Library & Sync
+              </div>
+              <div class="jump-link" data-target="security-sec">Security</div>
+              <div class="jump-link" data-target="support-sec">Support</div>
+            </nav>
+          </aside>
+
+          <div class="settings-scroll-area" id="settingsScrollArea">
+            <section id="general-sec" class="settings-block">
+              <h3 class="block-title">General</h3>
+              <div class="settings-card">
+                <div class="setting-item">
+                  <div class="setting-info">
+                    <label>Light Mode</label>
+                    <p>Enable light theme for better daytime browsing.</p>
+                  </div>
+                  <input type="checkbox" class="tgl-btn" id="darkModeToggle" />
+                </div>
+              </div>
+            </section>
+
+            <section id="library-sec" class="settings-block">
+              <h3 class="block-title">Library & Sync</h3>
+              <div class="settings-card">
+                <div class="setting-item">
+                  <div class="setting-info">
+                    <label>Auto-Sync Steam</label>
+                    <p>Automatically update your Steam library on startup.</p>
+                  </div>
+                  <input type="checkbox" class="tgl-btn" checked />
+                </div>
+                <div class="setting-item">
+                  <div class="setting-info">
+                    <label>Aggregated Metadata</label>
+                    <p>Fetch combined data from IGDB and Steam APIs.</p>
+                  </div>
+                  <input type="checkbox" class="tgl-btn" checked />
+                </div>
+                <div class="setting-item">
+                  <div class="setting-info">
+                    <label>Steam Accounts</label>
+                    <p>Add and manage multiple Steam accounts here.</p>
+                  </div>
+                  <button class="settings-link-btn" id="settingsAddSteamBtn">
+                    Add Steam Account
+                  </button>
+                </div>
+                <div id="steamAccountsList" class="account-list">
+                  <div class="account-placeholder">
+                    No Steam accounts linked yet.
+                  </div>
+                </div>
+                <div class="setting-item">
+                  <div class="setting-info">
+                    <label>Epic Account</label>
+                    <p>Link your Epic Games account for game sync.</p>
+                  </div>
+                  <button class="settings-link-btn" id="settingsLinkEpicBtn">
+                    Link Epic Account
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- ══ SECURITY SECTION ══ -->
+            <section id="security-sec" class="settings-block">
+              <h3 class="block-title">Security</h3>
+              <div class="settings-card">
+                <div class="setting-item">
+                  <div class="setting-info">
+                    <label>Two-Factor Authentication</label>
+                    <p id="twoFaStatusText">
+                      Adds an extra layer of security to your account.
+                    </p>
+                  </div>
+                  <button class="settings-link-btn" id="twoFaToggleBtn">
+                    Enable 2FA
+                  </button>
+                </div>
+
+                <!-- Inline QR panel (hidden by default) -->
+                <div
+                  id="settings2faPanel"
+                  style="display: none; padding: 16px 0 4px"
+                >
+                  <div id="settings2faSetup">
+                    <p
+                      style="
+                        font-size: 13px;
+                        color: var(--text-muted);
+                        margin-bottom: 12px;
+                      "
+                    >
+                      Scan this QR code with Google Authenticator or Authy, then
+                      enter the 6-digit code to confirm.
+                    </p>
+                    <div
+                      style="
+                        display: flex;
+                        justify-content: center;
+                        margin-bottom: 14px;
+                      "
+                    >
+                      <img
+                        id="settings2faQR"
+                        alt="2FA QR Code"
+                        style="
+                          width: 160px;
+                          height: 160px;
+                          border-radius: 8px;
+                          border: 2px solid var(--border-color, #2a2a3a);
+                        "
+                      />
+                    </div>
+                    <div
+                      class="auth-error"
+                      id="settings2faError"
+                      style="margin-bottom: 8px"
+                    ></div>
+                    <div style="display: flex; gap: 8px; align-items: center">
+                      <input
+                        class="auth-input auth-code-input"
+                        type="text"
+                        id="settings2faCode"
+                        placeholder="000000"
+                        maxlength="6"
+                        inputmode="numeric"
+                        style="flex: 1"
+                      />
+                      <button
+                        class="settings-link-btn"
+                        id="settings2faVerifyBtn"
+                      >
+                        Verify
+                      </button>
+                      <button
+                        class="settings-link-btn"
+                        id="settings2faCancelBtn"
+                        style="
+                          background: transparent;
+                          border: 1px solid var(--border-color, #2a2a3a);
+                          color: var(--text-muted);
+                        "
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="support-sec" class="settings-block">
+              <h3 class="block-title">Support</h3>
+              <div class="settings-card links-list">
+                <a href="#" class="list-item">
+                  <span>Privacy Policy</span>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
+                </a>
+                <a href="#" class="list-item">
+                  <span>Terms of Service</span>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
+                </a>
+                <div class="list-item no-hover">
+                  <span>App Version</span>
+                  <span class="v-tag">1.0.4-beta</span>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ REVIEWS PAGE ══ -->
+      <div class="page-view" id="page-reviews">
+        <div
+          class="back-button"
+          onclick="navigate('gamedetails', { appid: currentGameId })"
+        >
+          <div class="back-arrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path
+                d="M10 12L6 8L10 4"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <span>Back to Game</span>
+        </div>
+
+        <div class="rating-card">
+          <div class="rating-score" id="ratingScore">—</div>
+          <div class="stars" id="overallStars"></div>
+          <div class="review-count" id="reviewCountSummary">Loading…</div>
+        </div>
+
+        <div class="content-wrapper">
+          <div class="game-sidebar">
+            <img
+              id="revGameCoverImg"
+              src=""
+              alt="Game Cover"
+              class="game-cover"
+              onerror="
+                this.src =
+                  'https://placehold.co/396x541/1A1A24/E1E1EA?text=Game'
+              "
+            />
+            <div class="game-info">
+              <h2 class="game-title" id="revGameTitleText">Loading…</h2>
+              <div class="game-stats">
+                <div class="stat">
+                  <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M12 15C15.31 15 18 12.31 18 9C18 5.69 15.31 3 12 3C8.69 3 6 5.69 6 9C6 12.31 8.69 15 12 15Z"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                      />
+                      <path
+                        d="M3 21C3 17.13 6.13 14 10 14H14C17.87 14 21 17.13 21 21"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </div>
+                  <span id="revStatPlayers">—</span>
+                </div>
+                <div class="stat">
+                  <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.04L12 21.35Z"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <span id="revStatWishlisted">—</span>
+                </div>
+                <div class="stat">
+                  <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M21 15C21 15.53 20.79 16.04 20.41 16.41C20.04 16.79 19.53 17 19 17H7L3 21V5C3 4.47 3.21 3.96 3.59 3.59C3.96 3.21 4.47 3 5 3H19C19.53 3 20.04 3.21 20.41 3.59C20.79 3.96 21 4.47 21 5V15Z"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <span id="revStatReviews">—</span>
+                </div>
+              </div>
+            </div>
+            <button class="write-review-btn" id="writeReviewBtn">
+              <div class="review-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M13 2L3 12L2 14L4 13L14 3L13 2Z"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <span>Write a Review</span>
+            </button>
+          </div>
+
+          <div class="reviews-section">
+            <div class="filter-tabs" id="revFilterTabs">
+              <div class="tab active" data-filter="all">Most Recent</div>
+              <div class="tab" data-filter="helpful">Most Helpful</div>
+              <div class="tab" data-filter="positive">Positive</div>
+              <div class="tab" data-filter="negative">Negative</div>
+              <div class="tab dropdown-tab" data-filter="rating">
+                <span>Filter by Rating</span>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path
+                    d="M2 4.5L6 8.5L10 4.5"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="reviews-header">
+              <h3>All Reviews (<span id="reviewCount">0</span>)</h3>
+            </div>
+            <div class="reviews-list" id="reviewsList"></div>
+            <div class="pagination">
+              <button class="page-btn" id="prevPageBtn">Prev</button>
+              <div class="page-numbers" id="pageNumbers"></div>
+              <button class="page-btn" id="nextPageBtn">Next</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-form-container" id="reviewFormContainer">
+          <div class="form-tabs">
+            <div class="tabs-left">
+              <div class="form-tab active" data-form-tab="review">Review</div>
+            </div>
+            <div class="log-counter">CURRENT LOG 0</div>
+          </div>
+          <div class="form-content">
+            <h2 class="form-title">Write Your Own Review</h2>
+            <div class="form-row">
+              <div class="rating-section">
+                <label class="section-label">Rating</label>
+                <div class="rating-stars" id="ratingStars"></div>
+              </div>
+              <div class="platform-section">
+                <label class="platform-label">Platform</label>
+                <div class="platform-select" id="platformSelect">
+                  <span id="platformLabel">Select Release Platform..</span>
+                  <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                    <path
+                      d="M1 1L6 7L11 1"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </div>
+                <div class="platform-dropdown" id="platformDropdown">
+                  <div class="platform-option" data-value="PC">PC</div>
+                </div>
+              </div>
+            </div>
+            <div class="review-text-section">
+              <div class="section-header">
+                <label class="section-label">Review</label>
+                <span class="formatting-text">Formatting</span>
+              </div>
+              <textarea
+                class="text-area"
+                id="reviewText"
+                placeholder="What'd you think..."
+              ></textarea>
+              <div class="text-counter">
+                <span class="char-count" id="charCount">0 characters</span
+                ><span class="min-chars">Minimum 10 characters</span>
+              </div>
+            </div>
+            <div class="form-options">
+              <div class="option" id="spoilersOption">
+                <div class="checkbox" id="spoilersCheckbox"></div>
+                <span>Contains spoilers</span>
+              </div>
+              <div class="option" id="recommendOption">
+                <div class="checkbox checked" id="recommendCheckbox"></div>
+                <span>I recommend this game</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-footer">
+            <div class="full-editor">
+              <div class="editor-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle
+                    cx="8"
+                    cy="8"
+                    r="6.5"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  />
+                  <circle
+                    cx="8"
+                    cy="8"
+                    r="2.5"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  />
+                </svg>
+              </div>
+              <span>Use Full Editor</span>
+            </div>
+            <div class="form-buttons">
+              <button class="cancel-btn" id="cancelBtn">Cancel</button>
+              <button class="submit-btn" id="submitBtn" disabled>
+                Submit Review
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+    <!-- /main -->
 
-</div>
-<!-- /main -->
-
-<!-- Wishlist Activity Panel -->
-<div class="activity-panel-wrap" id="activityPanel">
-  <div class="activity-panel">
-    <h3 class="activity-title">Recent Activity</h3>
-    <div class="activity-list">
-      <div class="activity-item"><div class="act-body"><span class="act-game act-bold">Cyberpunk 2077</span><span class="act-event">dropped 40%</span><span class="act-time">2 hours ago</span></div></div>
-      <div class="activity-item"><div class="act-body"><span class="act-game act-bold">Hollow Knight: Silksong</span><span class="act-event">release date announced</span><span class="act-time">5 hours ago</span></div></div>
-      <div class="activity-item"><div class="act-body"><span class="act-game act-bold">Elden Ring</span><span class="act-event">major patch released</span><span class="act-time">12 hours ago</span></div></div>
+    <!-- Wishlist Activity Panel -->
+    <div class="activity-panel-wrap" id="activityPanel">
+      <div class="activity-panel">
+        <h3 class="activity-title">Recent Activity</h3>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="act-body">
+              <span class="act-game act-bold">Cyberpunk 2077</span
+              ><span class="act-event">dropped 40%</span
+              ><span class="act-time">2 hours ago</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="act-body">
+              <span class="act-game act-bold">Hollow Knight: Silksong</span
+              ><span class="act-event">release date announced</span
+              ><span class="act-time">5 hours ago</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="act-body">
+              <span class="act-game act-bold">Elden Ring</span
+              ><span class="act-event">major patch released</span
+              ><span class="act-time">12 hours ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-<script src="index.js"></script>
-</body>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="index.js"></script>
+  </body>
 </html>
